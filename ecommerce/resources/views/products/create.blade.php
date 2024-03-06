@@ -30,7 +30,7 @@
                         </div>
                         <div class="form-group">
                             <label for="image">Image</label>
-                            <input type="file" class="form-control-file" id="image" name="files[]" multiple>
+                            <input type="file" class="form-control-file" id="image" name="image" multiple>
                         </div>
                         <div class="form-group">
                             <label for="is_active">Is Active</label>
@@ -47,13 +47,22 @@
     </div>
 </div>
 
+<!-- Include necessary CSS and JavaScript libraries -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-pzjw8f+XtGLeJuZYyWzstwASK+v0hMHvhDLX+va5bXCEhFv/Z6a8r0+s2O6ste7I" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+
 <script>
 $(document).ready(function() {
     $('#addProductForm').on('submit', function(e) {
         e.preventDefault();
         
         var formData = new FormData(this); // Create FormData object to handle file upload
-        formData.append('_token', '{{ csrf_token() }}');
+        
         $.ajax({
             type: 'POST',
             url: '{{ route("products.store") }}',

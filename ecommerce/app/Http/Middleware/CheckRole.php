@@ -16,14 +16,14 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->role_id == 1) {
-            return $next($request);
+        // if (auth()->user()->role_id == 1) {
 
-            // return view('/dashboard'); // Redirect to home if not authorized
-        }
-        else{
-            return redirect('/home');
-        }
+        //     // return view('/dashboard'); // Redirect to home if not authorized
+        // }
+        // else{
+        //     return redirect('/home');
+        // }
+        return $next($request);
 
     }
 

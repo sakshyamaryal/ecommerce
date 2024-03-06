@@ -18,11 +18,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
 Route::middleware(['auth', 'role'])->group(function () {
-    Route::resource('products', ProductController::class);
+    // Route::resource('products', ProductController::class);
+    // Route for showing the form to add a new product
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+
+    // Route for storing the newly created product
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
+    // Route for listing all products
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     });
+    
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
 });
 
 // Auth routes

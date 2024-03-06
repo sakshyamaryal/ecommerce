@@ -15,8 +15,14 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2); // Example of decimal with precision of 8 and scale of 2
+            $table->integer('available_stock')->unsigned();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
+        
     }
 
     /**
