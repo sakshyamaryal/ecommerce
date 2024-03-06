@@ -1,0 +1,8 @@
+composer create-project --prefer-dist laravel/laravel ecommerce
+
+@php artisan key:generate --ansi
+php artisan make:auth
+php artisan make:middleware CheckRole
+php artisan make:model Product -m
+php artisan migrate
+php artisan make:migration create_roles_table
