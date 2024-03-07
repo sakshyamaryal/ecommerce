@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController; // Import AuthController
 use App\Http\Controllers\ProductController; 
+use App\Http\Controllers\OrderController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,7 +26,7 @@ Route::middleware(['auth', 'role'])->group(function () {
     // Route::resource('products', ProductController::class);
     // Route for showing the form to add a new product
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-
+    Route::resource('orders', OrderController::class);
     // Route for storing the newly created product
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 
@@ -40,6 +42,8 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::resource('products', ProductController::class)->except(['update']);
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 });
 
 // Auth routes
