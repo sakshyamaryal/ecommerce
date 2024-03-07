@@ -29,8 +29,14 @@ Route::get('/user-management', function () {
     return view('user-management');
 })->name('user-management');
 
+Route::get('/billing', function () {
+    return view('billing');
+})->name('billing');
+
+Route::get('/logout', function () {
+    return view('logout');
+})->name('logout');
 // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products', [ProductController::class, 'index'])->name('products');
 
 Route::middleware(['auth', 'role'])->group(function () {
     // Route::resource('products', ProductController::class);
@@ -55,3 +61,4 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.submit');
 Route::get('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'register'])->name('signup.submit');
+Route::get('/products', [ProductController::class, 'index'])->name('products');
