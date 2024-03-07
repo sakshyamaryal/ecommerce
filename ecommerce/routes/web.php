@@ -17,8 +17,20 @@ use App\Http\Controllers\ProductController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/dashboard', function () {
+    return view('dashboard.index');
+})->name('dashboard');
 
+Route::get('/user-profile', function () {
+    return view('user-profile');
+})->name('user-profile');
 
+Route::get('/user-management', function () {
+    return view('user-management');
+})->name('user-management');
+
+// Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products', [ProductController::class, 'index'])->name('products');
 
 Route::middleware(['auth', 'role'])->group(function () {
     // Route::resource('products', ProductController::class);
@@ -33,10 +45,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
-    
+
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 });
