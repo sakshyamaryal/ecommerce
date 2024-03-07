@@ -40,17 +40,21 @@
                                            @php
                                                 $images = explode(',', $product->image);
                                            @endphp
-                                                <img src="{{ asset('images/product_images/' . $images[0]) }}" alt="Product Image" style="max-width: 100px;">
+                                           <img src="{{ asset('images/product_images/' . $images[0]) }}" alt="Product Image" style="max-width: 100px;">
                                         @else
                                             No Image
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">Edit</a>
+                                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display: inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>

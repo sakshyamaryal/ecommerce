@@ -1,5 +1,3 @@
-<!-- resources/views/products/create.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -7,39 +5,52 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Add Product</div>
+                <div class="card-header">Edit Product</div>
 
                 <div class="card-body">
-                    <form id="addProductForm" enctype="multipart/form-data"> <!-- Add enctype for file upload -->
+                    <form id="editProductForm" enctype="multipart/form-data">
+                    <input type="hidden" name="_method" value="PUT">
                         <!-- @csrf -->
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" required>
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ $product->description }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+                            <input type="number" class="form-control" id="price" name="price" value="{{ $product->price }}" min="0" step="0.01" required>
                         </div>
                         <div class="form-group">
                             <label for="available_stock">Available Stock</label>
-                            <input type="number" class="form-control" id="available_stock" name="available_stock" min="0" required>
+                            <input type="number" class="form-control" id="available_stock" name="available_stock" value="{{ $product->available_stock }}" min="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="image">Image</label>
-                            <input type="file" class="form-control-file" id="image" name="image" multiple>
+                            <label for="image">Images</label><br>
+                            @if($product->image)
+                                @php
+                                    $images = explode(',', $product->image);
+                                @endphp
+                                @foreach($images as $image)
+                                    <img src="{{ asset('images/product_images/' . $image) }}" alt="Product Image" style="max-width: 100px;">
+                                @endforeach
+                            @else
+                                No Image
+                            @endif
+                            <!-- <input type="file" class="form-control-file" id="image" name="image" multiple> -->
+                            <input type="file" class="form-control-file" id="images" name="images[]" multiple>
                         </div>
                         <div class="form-group">
                             <label for="is_active">Is Active</label>
                             <select class="form-control" id="is_active" name="is_active" required>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
+                                <option value="1" {{ $product->is_active == 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $product->is_active == 0 ? 'selected' : '' }}>No</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Product</button>
+                        <input type="hidden" name="_method" value="PUT">
+                        <button type="submit" class="btn btn-primary">Update Product</button>
                     </form>
                 </div>
             </div>
@@ -58,17 +69,22 @@
 
 <script>
 $(document).ready(function() {
-    $('#addProductForm').on('submit', function(e) {
+    $('#editProductForm').on('submit', function(e) {
         e.preventDefault();
         
-        var formData = new FormData(this); // Create FormData object to handle file upload
+        var formData = new FormData(this);
+        var productId = '{{ $product->id }}'; // Get the product ID
         formData.append('_token', '{{ csrf_token() }}');
+        // Append the product ID to the update route
+        var updateUrl = '{{ route("products.update", ":id") }}';
+        updateUrl = updateUrl.replace(':id', productId);
+        
         $.ajax({
             type: 'POST',
-            url: '{{ route("products.store") }}',
+            url: updateUrl,
             data: formData,
-            processData: false, // Prevent jQuery from automatically processing the data
-            contentType: false, // Prevent jQuery from automatically setting the content type
+            processData: false,
+            contentType: false,
             success: function(response) {
                 Swal.fire({
                     icon: 'success',

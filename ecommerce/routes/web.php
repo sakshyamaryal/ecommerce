@@ -38,7 +38,8 @@ Route::middleware(['auth', 'role'])->group(function () {
     });
     
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-
+    Route::resource('products', ProductController::class)->except(['update']);
+    Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
 });
 
 // Auth routes
