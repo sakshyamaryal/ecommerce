@@ -83,4 +83,13 @@ class OrderController extends Controller
     {
         //
     }
+
+    public function getOrdersForProduct($productId)
+    {
+        // Fetch orders for the specified product
+        $orders = Order::where('product_id', $productId)->get();
+
+        // Return orders data as JSON response
+        return response()->json($orders);
+    }
 }

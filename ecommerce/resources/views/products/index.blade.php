@@ -96,6 +96,9 @@
         $('.view-orders').on('click', function (e) {
             e.preventDefault();
             var productId = $(this).data('product-id');
+            alert(productId);
+            $('#ordersModal').modal('show');
+
             $.ajax({
                 url: '/products/' + productId + '/orders',
                 type: 'GET',
@@ -113,14 +116,15 @@
                     } else {
                         $('#ordersModalBody').html('<p>No orders found for this product.</p>');
                     }
-                    $('#ordersModal').modal('show');
                 },
                 error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
+                    console.log(xhr.responseText);
                 }
             });
         });
     });
 </script>
-
 @endsection
+
+
+

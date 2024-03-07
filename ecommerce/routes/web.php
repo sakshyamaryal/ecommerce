@@ -44,6 +44,8 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    
+Route::get('/products/{productId}/orders', [OrderController::class, 'getOrdersForProduct'])->name('products.orders');
 });
 
 // Auth routes
