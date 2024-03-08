@@ -75,9 +75,17 @@ class ProductController extends Controller
     
 
     // Method for listing all products
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
+        $status = $request->input('status');
+        if ($status === 'active') {
+            $products = Product::where('is_active', true)->get();
+        } elseif ($status === 'inactive') {
+            $products = Product::where('is_active', false)->get();
+        } else {
+            $products = Product::all();
+        }
+
         return view('products.index', compact('products'));
     }
 

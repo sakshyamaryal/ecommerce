@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController; // Import AuthController
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController; 
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     // Route for listing all products
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/changerole', [UserController::class, 'changeRole'])->name('users.changeRole');
 
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 

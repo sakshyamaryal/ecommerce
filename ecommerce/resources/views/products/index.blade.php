@@ -7,12 +7,22 @@
             <p class="text-black mt-5 mb-5">Welcome back, <b>Admin</b></p>
         </div>
     </div>
+    
+    
 
     <div class="container mt-5">
         <div class="row tm-content-row">
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
                 <div class="tm-bg-primary-dark tm-block tm-block-products">
+                    <!-- <h2 class="tm-block-title">Product List</h2> -->
+
                     <div class="tm-product-table-container">
+                    <div class="btn-group " role="group" aria-label="Status Filter">
+                        <a href="{{ route('products.index', ['status' => 'active']) }}" class="btn btn-success">Active</a>
+                        <a href="{{ route('products.index', ['status' => 'inactive']) }}" class="btn btn-secondary">Inactive</a>
+                        <a href="{{ route('products.index') }}" class="btn btn-outline-primary">All</a>
+                    </div>
+                    <br>
                         <table class="table table-hover tm-table-small tm-product-table">
                             <thead>
                                 <tr>

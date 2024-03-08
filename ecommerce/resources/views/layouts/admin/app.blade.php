@@ -76,7 +76,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="accounts.html">
+                            <a class="nav-link" href="{{url('users')}}">
                                 <i class="far fa-user"></i>
                                 Accounts
                             </a>
