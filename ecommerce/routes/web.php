@@ -38,8 +38,9 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::post('/changerole', [UserController::class, 'changeRole'])->name('users.changeRole');
 
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::get('/products/{id}/details', [ProductController::class, 'details'])->name('product.details');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashbaord.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Route::get('/dashboard', function () {
     //     return view('admin.dashboard');

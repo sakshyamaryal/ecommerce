@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -14,6 +15,22 @@ class ProductController extends Controller
         return view('products.create');
     }
 
+    public function details($id)
+    {
+        $product = Product::findOrFail($id);
+        
+        // Retrieve orders associated with the product along with user names
+        $orders = Order::where('product_id', $id)
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->select('orders.*', 'users.name as user_name', 'users.email')
+            ->latest()
+            ->take(10)
+            ->get();
+        
+        // Pass both product and orders to the view
+        return view('admin.productOrderDetail', compact('product', 'orders'));
+    }
+    
     // Method for storing the newly created product
     public function store(Request $request)
     {

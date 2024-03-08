@@ -40,7 +40,8 @@
                                 @foreach($products as $product)
                                 <tr class="tm-product-row">
                                     <th scope="row"><input type="checkbox" class="select-product" data-product-id="{{ $product->id }}" /></th>
-                                    <td class="tm-product-name">{{ $product->name }}</td>
+                                    <td class="tm-product-name">{{ Illuminate\Support\Str::limit($product->name, 20, '...') }}</td>
+
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->available_stock }}</td>
                                     <td>
@@ -70,6 +71,9 @@
                                                         <i class="far fa-trash-alt tm-product-delete-icon"></i>
                                                     </a>
                                         </form>
+                                        <a href="{{ route('product.details', ['id' => $product->id]) }}" style="color:white" class="tm-product-edit-link tm-product-delete-link">
+                                            <i class="far fa-eye tm-product-view-icon ml-1"></i>
+                                        </a>
                                         
                                     </td>
                                 </tr>

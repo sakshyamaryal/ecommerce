@@ -67,9 +67,14 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Update</button>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary btn-block text-uppercase flex-fill mr-2">Update</button>
+                                <a href="{{ route('product.details', ['id' => $product->id]) }}" class="btn btn-success btn-sm mt-1 flex-fill">View Product Description</a>
+                            </div>
                         </div>
                     </div>
+
+
                     </form>
                 </div>
             </div>
