@@ -45,10 +45,10 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::resource('products', ProductController::class)->except(['update']);
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
-
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    
-Route::get('/products/{productId}/orders', [OrderController::class, 'getOrdersForProduct'])->name('products.orders');
+    Route::get('/products/{productId}/orders', [OrderController::class, 'getOrdersForProduct'])->name('products.orders');
+    Route::post('/products/deleteSelected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
+
 });
 
 // Auth routes

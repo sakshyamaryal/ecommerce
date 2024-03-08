@@ -24,9 +24,12 @@
     <!-- https://getbootstrap.com/ -->
     <script src="{{ asset('js/tooplate-scripts.js') }}"></script>
     <!--
+        
 	Product Admin CSS Template
 	https://templatemo.com/tm-524-product-admin
 	-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body id="reportsPage">

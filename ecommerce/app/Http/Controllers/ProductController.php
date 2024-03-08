@@ -33,10 +33,10 @@ class ProductController extends Controller
         $imageNames = [];
         $img_exist = false;
 
-        if ($request->hasFile('files')) {
+        if ($request->hasFile('images')) {
             $i = 0;
 
-            foreach ($request->file('files') as $file) {
+            foreach ($request->file('images') as $file) {
                 $timestamp = now()->timestamp;
                 $itemName = strtolower(trim(str_replace(' ', '-', $request->itemname)));
                 $imageName = "{$itemName}{$i}_{$timestamp}.{$file->extension()}";
@@ -155,6 +155,16 @@ class ProductController extends Controller
         ]);
 
         return response()->json(['message' => 'Product updated successfully'], 200);
+    }
+
+    public function deleteSelected(Request $request)
+    {
+        $productIds = $request->input('productIds');
+
+        // Delete the selected products
+        Product::whereIn('id', $productIds)->delete();
+
+        return response()->json(['message' => 'Selected products deleted successfully']);
     }
 
 

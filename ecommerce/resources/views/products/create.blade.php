@@ -1,60 +1,69 @@
-<!-- resources/views/products/create.blade.php -->
-
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Add Product</div>
+<div class="container tm-mt-big tm-mb-big">
+    <div class="row">
+        <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+            <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block">Add New Product</h2>
+                    </div>
+                </div>
+                <div class="row tm-edit-product-row">
+                    <div class="col-xl-6 col-lg-6 col-md-12">
+                        <form id="addProductForm" enctype="multipart/form-data">
 
-                <div class="card-body">
-                    <form id="addProductForm" enctype="multipart/form-data"> <!-- Add enctype for file upload -->
-                        <!-- @csrf -->
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="form-group mb-3">
+                                <label for="name">Product Name</label>
+                                <input id="name" name="name" type="text" class="form-control validate" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" class="form-control validate tm-small" rows="5" required></textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="category">Category</label>
+                                <select id="is_active" class="custom-select tm-select-accounts" name="is_active">
+                                    <option>Active Status</option>
+                                    <option value="1" selected>Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                    <label for="expire_date">Price</label>
+                                    <input id="price" name="price" type="text"  class="form-control validate" data-large-mode="true">
+                                </div>
+                                <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                    <label for="stock">Available Stock</label>
+                                    <input id="available_stock" name="available_stock" type="text" class="form-control validate">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="custom-file mt-3 mb-3">
+                                <input id="fileInput" type="file" style="display:none;">
+
+                                <input type="file" class="form-control-file btn btn-primary btn-block mx-auto" id="images" name="images[]" multiple>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Add New Product</button>
                         </div>
-                        <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="available_stock">Available Stock</label>
-                            <input type="number" class="form-control" id="available_stock" name="available_stock" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="image">Image</label>
-                            <input type="file" class="form-control-file" id="image" name="image[]" multiple>
-                        </div>
-                        <div class="form-group">
-                            <label for="is_active">Is Active</label>
-                            <select class="form-control" id="is_active" name="is_active" required>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 
-<!-- Include necessary CSS and JavaScript libraries -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-pzjw8f+XtGLeJuZYyWzstwASK+v0hMHvhDLX+va5bXCEhFv/Z6a8r0+s2O6ste7I" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
 <script>
 $(document).ready(function() {

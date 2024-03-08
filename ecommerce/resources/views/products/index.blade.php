@@ -29,7 +29,7 @@
                             <tbody>
                                 @foreach($products as $product)
                                 <tr class="tm-product-row">
-                                    <th scope="row"><input type="checkbox" /></th>
+                                    <th scope="row"><input type="checkbox" class="select-product" data-product-id="{{ $product->id }}" /></th>
                                     <td class="tm-product-name">{{ $product->name }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->available_stock }}</td>
@@ -53,9 +53,14 @@
                                         <a href="{{ route('products.edit', $product->id) }}" style="color:white" class="tm-product-edit-link tm-product-delete-link">
                                             <i class="far fa-edit tm-product-edit-icon"></i>
                                         </a>
-                                        <a href="#" class="tm-product-delete-link">
-                                            <i class="far fa-trash-alt tm-product-delete-icon"></i>
-                                        </a>
+                                        <form id="deleteForm{{ $product->id }}" action="{{ route('products.destroy', $product->id) }}" method="POST" style="display: inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a href="#" class="tm-product-delete-link" onclick="confirmDelete('{{ $product->id }}')">
+                                                        <i class="far fa-trash-alt tm-product-delete-icon"></i>
+                                                    </a>
+                                        </form>
+                                        
                                     </td>
                                 </tr>
                                 @endforeach
@@ -63,8 +68,8 @@
                         </table>
                     </div>
                     <!-- table container -->
-                    <a href="add-product.html" class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
-                    <button class="btn btn-primary btn-block text-uppercase">
+                    <a href="{{url('products/create')}}" class="btn btn-primary btn-block text-uppercase mb-3">Add new product</a>
+                    <button id="deleteSelectedBtn" class="btn btn-primary btn-block text-uppercase">
                         Delete selected products
                     </button>
                 </div>
@@ -128,5 +133,60 @@
             });
         });
     });
+    function confirmDelete(productId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm' + productId).submit();
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        // Function to delete selected products
+        function deleteSelectedProducts(productIds) {
+            $.ajax({
+                url: '{{ route("products.deleteSelected") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    productIds: productIds
+                },
+                success: function(response) {
+                    alert(response.message);
+                    // Reload the page or update the product list as needed
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred while deleting selected products.');
+                }
+            });
+        }
+
+        // Event listener for delete selected products button
+        $('#deleteSelectedBtn').click(function() {
+            var selectedProductIds = [];
+            $('.select-product:checked').each(function() {
+                selectedProductIds.push($(this).data('product-id'));
+            });
+
+            if (selectedProductIds.length > 0) {
+                if (confirm('Are you sure you want to delete the selected products?')) {
+                    deleteSelectedProducts(selectedProductIds);
+                }
+            } else {
+                alert('Please select at least one product to delete.');
+            }
+        });
+    });
 </script>
+
 @endsection

@@ -159,11 +159,11 @@
                                                 <button class="btn btn-info view-orders btn-sm mr-1" data-product-id="{{ $product->id }}">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
-                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display: inline-block;">
+                                                <form id="deleteForm{{ $product->id }}" action="{{ route('products.destroy', $product->id) }}" method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">
-                                                        <i class="fa fa-trash"></i> 
+                                                    <button type="button" onclick="confirmDelete('{{ $product->id }}')" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
                                             </div>
@@ -214,6 +214,24 @@
             });
         });
     });
+</script>
+
+<script>
+    function confirmDelete(productId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm' + productId).submit();
+            }
+        });
+    }
 </script>
 @endsection
 
