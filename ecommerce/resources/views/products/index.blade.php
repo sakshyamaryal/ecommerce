@@ -124,13 +124,12 @@
                 type: 'GET',
                 success: function(response) {
                     // Populate modal with orders data
-                    // Assuming you have a modal with id 'ordersModal' and a body with id 'ordersModalBody'
+                    
                     $('#ordersModalBody').empty();
                     if (response.length > 0) {
                         var ordersHtml = '';
                         $.each(response, function(index, order) {
                             ordersHtml += '<p>Order ID: ' + order.id + '</p>';
-                            // Add more order details as needed
                         });
                         $('#ordersModalBody').html(ordersHtml);
                     } else {

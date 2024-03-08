@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Arr;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -36,5 +38,18 @@ class UserSeeder extends Seeder
         $user->role()->associate(Role::where('name', 'user')->first());
         $user->save();
 
+        for ($i = 1; $i <= 10; $i++) {
+            $status = rand(0, 1) ? 'user' : 'admin';
+
+            $user = User::create([
+                'name' => 'User ' . $i,
+                'email' => 'user' . $i . '@example.com',
+                'password' => bcrypt('password'),
+            ]);
+
+            // Assign a random role to the user
+            $user->role()->associate(Role::where('name', $status)->first());
+            $user->save();
+        }
     }
 }
