@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController; // Import AuthController
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController; 
 use App\Http\Controllers\OrderController;
 
@@ -35,9 +36,11 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashbaord.index');
+
+    // Route::get('/dashboard', function () {
+    //     return view('admin.dashboard');
+    // });
     
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::resource('products', ProductController::class)->except(['update']);

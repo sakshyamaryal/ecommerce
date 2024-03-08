@@ -1,108 +1,120 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Edit Product</div>
-
-                <div class="card-body">
-                    <form id="editProductForm" enctype="multipart/form-data">
-                    <input type="hidden" name="_method" value="PUT">
-                        <!-- @csrf -->
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3">{{ $product->description }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" value="{{ $product->price }}" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="available_stock">Available Stock</label>
-                            <input type="number" class="form-control" id="available_stock" name="available_stock" value="{{ $product->available_stock }}" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="image">Images</label><br>
-                            @if($product->image)
-                                @php
+<div class="container tm-mt-big tm-mb-big">
+    <div class="row">
+        <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+            <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block">Edit Product</h2>
+                    </div>
+                </div>
+                <div class="row tm-edit-product-row">
+                    <div class="col-xl-6 col-lg-6 col-md-12">
+                        <form id="editProductForm" enctype="multipart/form-data">
+                            <input type="hidden" name="_method" value="PUT">
+                            <div class="form-group mb-3">
+                                <label for="name">Product Name</label>
+                                <input id="name" name="name" type="text" value="{{ $product->name }}" class="form-control validate" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" class="form-control validate tm-small" rows="5" required>{{ $product->description }}</textarea>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="category">Category</label>
+                                <select id="is_active" class="custom-select tm-select-accounts" name="is_active">
+                                    <option>Active Status</option>
+                                    <option value="1" selected>Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                    <label for="expire_date">Price</label>
+                                    <input id="price" name="price" type="text" value="{{ $product->price }}" class="form-control validate" data-large-mode="true">
+                                </div>
+                                <div class="form-group mb-3 col-xs-12 col-sm-6">
+                                    <label for="stock">Available Stock</label>
+                                    <input id="available_stock" name="available_stock" type="text" value="{{ $product->available_stock }}" class="form-control validate">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="tm-product-img-edit mx-auto">
+                                <div class="d-flex flex-wrap justify-content-center">
+                                    @if($product->image)
+                                    @php
                                     $images = explode(',', $product->image);
-                                @endphp
-                                @foreach($images as $image)
-                                    <img src="{{ asset('images/product_images/' . $image) }}" alt="Product Image" style="max-width: 100px;">
-                                @endforeach
-                            @else
-                                No Image
-                            @endif
-                            <!-- <input type="file" class="form-control-file" id="image" name="image" multiple> -->
-                            <input type="file" class="form-control-file" id="images" name="images[]" multiple>
+                                    @endphp
+                                    @foreach($images as $image)
+                                    <img src="{{ asset('images/product_images/' . $image) }}" alt="Product Image" class="img-fluid mx-2" style="max-width: 80px; max-height: 80px;">
+                                    @endforeach
+                                    @else
+                                    <img src="img/product-image.jpg" alt="Product image" class="img-fluid mx-2" style="max-width: 80px; max-height: 80px;">
+                                    @endif
+                                </div>
+                                <i class="fas fa-cloud-upload-alt tm-upload-icon mt-2" onclick="document.getElementById('fileInput').click();"></i>
+                            </div>
+                            <div class="custom-file mt-3 mb-3">
+                                <input id="fileInput" type="file" style="display:none;">
+                                <input type="file" class="form-control-file btn btn-primary btn-block mx-auto" id="images" name="images[]" multiple>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="is_active">Is Active</label>
-                            <select class="form-control" id="is_active" name="is_active" required>
-                                <option value="1" {{ $product->is_active == 1 ? 'selected' : '' }}>Yes</option>
-                                <option value="0" {{ $product->is_active == 0 ? 'selected' : '' }}>No</option>
-                            </select>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block text-uppercase">Update</button>
                         </div>
-                        <input type="hidden" name="_method" value="PUT">
-                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 
-<!-- Include necessary CSS and JavaScript libraries -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-pzjw8f+XtGLeJuZYyWzstwASK+v0hMHvhDLX+va5bXCEhFv/Z6a8r0+s2O6ste7I" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-$(document).ready(function() {
-    $('#editProductForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        var formData = new FormData(this);
-        var productId = '{{ $product->id }}'; // Get the product ID
-        formData.append('_token', '{{ csrf_token() }}');
-        // Append the product ID to the update route
-        var updateUrl = '{{ route("products.update", ":id") }}';
-        updateUrl = updateUrl.replace(':id', productId);
-        
-        $.ajax({
-            type: 'POST',
-            url: updateUrl,
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.message
-                }).then(() => {
-                    window.location.href = '{{ route("products.index") }}';
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: xhr.responseJSON.message
-                });
-            }
+    $(document).ready(function() {
+        $('#editProductForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            var productId = '{{$product->id }}'; // Get the product ID
+            formData.append('_token', '{{ csrf_token() }}');
+            // Append the product ID to the update route
+            var updateUrl = '{{ route("products.update", ":id") }}';
+            updateUrl = updateUrl.replace(':id', productId);
+            $.ajax({
+                type: 'POST',
+                url: updateUrl,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message
+                    }).then(() => {
+                        window.location.href = '{{ route("products.index") }}';
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: xhr.responseJSON.message
+                    });
+                }
+            });
         });
     });
-});
 </script>
 @endsection

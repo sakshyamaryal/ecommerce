@@ -30,7 +30,7 @@
                         </div>
                         <div class="form-group">
                             <label for="image">Image</label>
-                            <input type="file" class="form-control-file" id="image" name="image[]" multiple>
+                            <input type="file" class="form-control-file" id="image" name="image" multiple>
                         </div>
                         <div class="form-group">
                             <label for="is_active">Is Active</label>
