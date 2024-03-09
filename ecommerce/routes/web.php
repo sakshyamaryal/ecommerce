@@ -54,6 +54,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/products/deleteSelected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
     Route::post('/orders/{id}/accept', [OrderController::class, 'accept'])->name('orders.accept');
     Route::post('/orders/statusWiseOrder', [OrderController::class, 'statusWiseOrder'])->name('orders.statusWiseOrder');
+    Route::get('/reports', [DashboardController::class, 'generateReport'])->name('admin.report');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 });
 
 // Auth routes

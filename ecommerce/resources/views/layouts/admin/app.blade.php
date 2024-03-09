@@ -28,7 +28,7 @@
 	Product Admin CSS Template
 	https://templatemo.com/tm-524-product-admin
 	-->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 </head>
 
@@ -39,8 +39,7 @@
                 <a class="navbar-brand" href="index.html">
                     <h1 class="tm-site-title mb-0">Diagonal Technology</h1>
                 </a>
-                <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fas fa-bars tm-nav-icon"></i>
                 </button>
 
@@ -54,20 +53,20 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="far fa-file-alt"></i>
                                 <span>
                                     Reports <i class="fas fa-angle-down"></i>
                                 </span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Daily Report</a>
-                                <a class="dropdown-item" href="#">Weekly Report</a>
-                                <a class="dropdown-item" href="#">Yearly Report</a>
+                                <a class="dropdown-item" href="{{ route('admin.report', ['type' => 'daily']) }}">Daily Report</a>
+                                <a class="dropdown-item" href="{{ route('admin.report', ['type' => 'weekly']) }}">Weekly Report</a>
+                                <a class="dropdown-item" href="{{ route('admin.report', ['type' => 'yearly']) }}">Yearly Report</a>
                             </div>
                         </li>
+
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('products') }}">
                                 <i class="fas fa-shopping-cart"></i>
@@ -81,9 +80,8 @@
                                 Accounts
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                        <!-- <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-cog"></i>
                                 <span>
                                     Settings <i class="fas fa-angle-down"></i>
@@ -94,12 +92,18 @@
                                 <a class="dropdown-item" href="#">Billing</a>
                                 <a class="dropdown-item" href="#">Customize</a>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link d-block" href="login.html">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <a class="nav-link d-block" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+
+
                                 Admin, <b>Logout</b>
+
                             </a>
                         </li>
                     </ul>
@@ -111,8 +115,8 @@
         <footer class="tm-footer row tm-mt-small">
             <div class="col-12 font-weight-light">
                 <p class="text-center text-white mb-0 px-4 small">
-                    Copyright &copy; <b>2024</b> All rights reserved. 
-                    
+                    Copyright &copy; <b>2024</b> All rights reserved.
+
                     <a rel="nofollow noopener" href="https://templatemo.com" class="tm-footer-link">Sakshyam Aryal</a>
                 </p>
             </div>
@@ -131,16 +135,16 @@
             configBar,
             configPie,
             lineChart,
-        barChart, pieChart;
+            barChart, pieChart;
         // DOM is ready
-        $(function () {
+        $(function() {
             drawLineChart(); // Line Chart
             drawBarChart(); // Bar Chart
             drawPieChart(); // Pie Chart
 
-            $(window).resize(function () {
+            $(window).resize(function() {
                 updateLineChart();
-                updateBarChart();                
+                updateBarChart();
             });
         })
     </script>

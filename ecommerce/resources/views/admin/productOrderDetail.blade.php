@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="main">
-
-
     <div class="container mt-4">
         <hr>
         <div class="row">
