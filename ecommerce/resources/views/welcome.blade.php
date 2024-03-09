@@ -1,83 +1,164 @@
-<!-- resources/views/products/create.blade.php -->
-
-@extends('layouts.app')
+@extends('layouts.user.usertemplate')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Add Product</div>
+<section class="carousel">
+    <div id="bannerCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active" style="background-image: url('./images/iphone.jpg');">
+                <div class="overlay">
+                    <div class="banner-text">
+                        <h2>Discover Our Latest iPhones</h2>
+                        <p>Experience cutting-edge technology</p>
+                    </div>
+                    <button class="shop-now-btn">Shop Now</button>
+                </div>
+            </div>
 
-                <div class="card-body">
-                    <form id="addProductForm" enctype="multipart/form-data"> <!-- Add enctype for file upload -->
-                        <!-- @csrf -->
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="available_stock">Available Stock</label>
-                            <input type="number" class="form-control" id="available_stock" name="available_stock" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="image">Image</label>
-                            <input type="file" class="form-control-file" id="image" name="files[]" multiple>
-                        </div>
-                        <div class="form-group">
-                            <label for="is_active">Is Active</label>
-                            <select class="form-control" id="is_active" name="is_active" required>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Product</button>
-                    </form>
+            <!-- Slide 2 -->
+            <div class="carousel-item" style="background-image: url('https://ecocart.io/wp-content/uploads/resized/2023/01/iStock-1371318211-1120x455-c-default.jpg');">
+                <div class="overlay">
+                    <div class="banner-text">
+                        <h2>Get 20% off on groceries</h2>
+                        <p>All kind of groceries are now available here</p>
+                    </div>
+                    <button class="shop-now-btn">Shop Now</button>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item" style="background-image: url('https://cdn.fashiola.in/I193956/768x0/trendy-college-outfits-under-rs-3-5k.jpg');">
+                <div class="overlay">
+                    <div class="banner-text">
+                        <h2>Upgrade Your Lifestyle with Our New Clothes</h2>
+                        <p>Trendy clothes, exceptional style</p>
+                    </div>
+                    <button class="shop-now-btn">Shop Now</button>
                 </div>
             </div>
         </div>
+
+        <!-- Navigation Arrows -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+
+<section class="products">
+    <div class="section-title">
+        <div class="line left"></div>
+        <span class="featured-products">Featured Products</span>
+        <div class="line right"></div>
+    </div>
+
+    <!-- Featured Products Slider -->
+    <div class="container">
+    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner">
+            @php
+                $chunks = array_chunk($products->toArray(), 4);
+            @endphp
+            @foreach ($chunks as $key => $chunk)
+                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                    <div class="row">
+                        @foreach ($chunk as $product)
+                            <div class="col-md-3">
+                            <a href="{{ route('product.show', ['id' => $product['id']]) }}">
+                                    <div class="card">
+                                        @if($product['image'])
+                                            @php
+                                                $images = explode(',', $product['image']);
+                                            @endphp
+                                            <img src="{{ asset('images/product_images/' . $images[0]) }}" class="card-img-top"  alt="{{ $product['name'] }}">
+                                        @else
+                                            No Image
+                                        @endif
+                                        <div class="card-body d-flex flex-column align-items-center">
+                                            <h5 class="card-title">{{ $product['name'] }}</h5>
+                                            <div class="rating">⭐⭐⭐⭐</div>
+                                            <p class="price">Rs. {{ $product['price'] }}</p>
+                                            <button class="add-to-cart-btn">Add to Cart</button>
+                                            <i class="favorite-icon far fa-heart"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button> -->
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
-    $('#addProductForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        var formData = new FormData(this); // Create FormData object to handle file upload
-        formData.append('_token', '{{ csrf_token() }}');
-        $.ajax({
-            type: 'POST',
-            url: '{{ route("products.store") }}',
-            data: formData,
-            processData: false, // Prevent jQuery from automatically processing the data
-            contentType: false, // Prevent jQuery from automatically setting the content type
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.message
-                }).then(() => {
-                    window.location.href = '{{ route("products.index") }}';
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: xhr.responseJSON.message
-                });
-            }
-        });
-    });
-});
-</script>
+</section>
+<section class="latest-products">
+    <div class="section-title">
+        <div class="line left"></div>
+        <span class="featured-products">Latest Products</span>
+        <div class="line right"></div>
+    </div>
+
+    <!-- Featured Products Slider -->
+    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner">
+            @php
+                $chunks = array_chunk($products->toArray(), 4);
+            @endphp
+            @foreach ($chunks as $key => $chunk)
+                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                    <div class="row">
+                        @foreach ($chunk as $product)
+                            <div class="col-md-3">
+                            <a href="{{ route('product.show', ['id' => $product['id']]) }}">
+                                    <div class="card">
+                                        @if($product['image'])
+                                            @php
+                                                $images = explode(',', $product['image']);
+                                            @endphp
+                                            <img src="{{ asset('images/product_images/' . $images[0]) }}" class="card-img-top"  alt="{{ $product['name'] }}">
+                                        @else
+                                            No Image
+                                        @endif
+                                        <div class="card-body d-flex flex-column align-items-center">
+                                            <h5 class="card-title">{{ $product['name'] }}</h5>
+                                            <div class="rating">⭐⭐⭐⭐</div>
+                                            <p class="price">Rs. {{ $product['price'] }}</p>
+                                            <button class="add-to-cart-btn">Add to Cart</button>
+                                            <i class="favorite-icon far fa-heart"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button> -->
+    </div>
+</section>
+
 @endsection

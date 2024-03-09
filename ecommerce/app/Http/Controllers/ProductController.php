@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -86,6 +87,8 @@ class ProductController extends Controller
         $product->available_stock = $request->input('available_stock');
         $product->is_active = $request->input('is_active');
         $product->image = $imagePathsString; // Storing multiple image paths as a comma-separated string
+        $product->added_by = auth()->user()->id;
+
         $product->save();
 
     
@@ -179,7 +182,8 @@ class ProductController extends Controller
             'price' => $request->input('price'),
             'available_stock' => $request->input('available_stock'),
             'is_active' => $request->input('is_active'),
-            'image' => $imagePathsString, // Storing multiple image paths as a comma-separated string
+            'image' => $imagePathsString,
+            
         ]);
 
         return response()->json(['message' => 'Product updated successfully'], 200);
@@ -195,5 +199,28 @@ class ProductController extends Controller
         return response()->json(['message' => 'Selected products deleted successfully']);
     }
 
+    public function show($id)
+    {
+        $product = DB::table('products')
+                    ->join('users', 'users.id', '=', 'products.added_by')
+                    ->select(
+                        'users.id AS user_id',
+                        'users.name AS user_name',
+                        'users.email AS user_email',
+                        'products.id AS product_id',
+                        'products.name AS product_name',
+                        'products.description AS product_description',
+                        'products.price AS product_price',
+                        'products.available_stock AS product_available_stock',
+                        'products.is_active AS product_is_active',
+                        'products.created_at AS product_created_at',
+                        'products.updated_at AS product_updated_at',
+                        'products.image'
+                    )
+                    ->where('products.id', $id)
+                    ->first();
+
+        return view('user.productdetail', compact('product'));
+    }
 
 }
