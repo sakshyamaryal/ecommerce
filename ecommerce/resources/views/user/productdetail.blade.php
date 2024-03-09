@@ -10,26 +10,30 @@
             <!-- Swiper -->
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
+
                             @if($product->image)
                             @php
                             $images = explode(',', $product->image);
                             @endphp
                             @foreach($images as $image)
-                
+                            <div class="swiper-slide">
                             <div class="image-container">
                                 <img src="{{ asset('images/product_images/' . $image) }}" alt="{{ $product->product_name }}">
                             </div>
+                            </div>
+
                             @endforeach
                             @else
+                            <div class="swiper-slide">
                             <div class="image-container">
                                 <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}">
+                            </div>
                             </div>
 
                             @endif
 
                        
-                    </div>
+
                 </div>
 
                 <div class="swiper-pagination"></div>

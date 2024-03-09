@@ -23,7 +23,7 @@ class ProductsTableSeeder extends Seeder
                 'price' => rand(1000, 50000) / 100, // Random price between 10.00 and 500.00
                 'available_stock' => rand(1, 50), // Random available stock between 1 and 50
                 'is_active' => 1,
-                'image' => '0_1710002677.jpg',
+                'image' => '0_1710002677.jpg,0_1710002677.jpg,0_1710002677.jpg',
                 'added_by' => $i,
             ]);
         }
