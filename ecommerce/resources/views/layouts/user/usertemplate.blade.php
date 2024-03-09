@@ -97,7 +97,7 @@
           <div class="col-md-3">
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
-              <li><a href="#">Home</a></li>
+              <li><a href="{{ route('welcome') }}">Home</a></li>
               <li><a href="#">Products</a></li>
               <li><a href="#">Categories</a></li>
               <li><a href="#">About Us</a></li>
