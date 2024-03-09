@@ -51,29 +51,47 @@
                 <hr>
                 <div class="container-fluid">
                     <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm mr-1">
-                        <i class="fa fa-edit"> Edit Product</i> 
+                        <i class="fa fa-edit"> Edit Product</i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
     <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
         <h2 class="tm-block-title">Recent Order List</h2>
-        <div class="tm-notification-items">
-            @foreach($orders as $order)
-                <div class="media tm-notification-item">
-                    <div class="tm-gray-circle">
-                    </div>
+        <div class="dropdown">
+            <button class="dropdown-toggle" type="button" id="statusFilterDropdown">
+                Filter by Status
+            </button>
+            <div class="dropdown-menu" aria-labelledby="statusFilterDropdown">
+                <button style="color: #000;" class="dropdown-item" data-status="completed">Completed</button>
+                <button style="color: #000;" class="dropdown-item" data-status="created">Not Completed</button>
+            </div>
+        </div>
+        <div class="tm-notification-items" id="ordersofproduct">
+            <!-- Orders will be displayed here -->
+            <br><br>
+            <div id="ordersContainer">
+                @foreach($orders as $order)
+                <div class="media tm-notification-item" id="order_{{$order->id}}">
+                    <div class="tm-gray-circle"></div>
                     <div class="media-body">
-                        <p class="mb-2"><b>{{ $order->user_name }}</b> ({{ $order->email }}) has placed a new order for Product id <b>{{ $order->product_id }}</b>. 
-                            <a href="{{ route('product.details', ['id' => $order->product_id]) }}">Accept Order</a>
-                        </p>
-                        <span class="tm-small tm-text-color-secondary">{{ $order->created_at->diffForHumans() }}</span>
+                        <p class="mb-2"><b>{{ $order->user_name }}</b> ({{ $order->email }}) has placed a new order for Product id <b>{{ $order->product_id }}</b>.</p>
+                        <span class="tm-small tm-text-color-secondary pull-right"> Order created {{ $order->created_at->diffForHumans() }}</span>
+
+                        @if ($order->status != 'completed')
+                        <button class="btn btn-secondary btn-sm accept-order pull-right" style="float: right;" data-order-id="{{ $order->id }}">Accept Order</button>
+                        @else
+                        <span class="badge badge-success">Completed</span>
+                        @endif
                     </div>
                 </div>
-            @endforeach
+                @endforeach
+            </div>
+
         </div>
     </div>
 </div>
@@ -98,7 +116,114 @@
         },
     });
 </script>
+<script>
+    function acceptOrder() {
+        $('.accept-order').click(function() {
+            var orderId = $(this).data('order-id');
+
+            // Display confirmation modal
+            swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to accept this order?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, accept it!',
+                cancelButtonText: 'No, cancel!',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If user confirms, proceed to accept the order
+                    $.ajax({
+                        url: "{{ route('orders.accept', ['id' => ':id']) }}".replace(':id', orderId),
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                        },
+                        success: function(response) {
+                            // Show success message
+                            swal.fire("Order Accepted", "The order has been accepted successfully", "success");
+
+                            // Remove the corresponding div
+                            $('#order_' + orderId).remove();
+                        },
+                        error: function(xhr) {
+                            // Show error message if needed
+                            swal.fire("Error", "An error occurred while accepting the order", "error");
+                        }
+                    });
+                }
+            });
+        });
+    }
+    $(document).ready(function() {
+        acceptOrder();
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.dropdown-item').click(function() {
+            var status = $(this).data('status');
+            var productId = "{{ $product->id }}"; // Get the product ID
+            var token = "{{ csrf_token() }}"; // Get CSRF token
+
+            $.ajax({
+                url: "{{ route('orders.statusWiseOrder') }}",
+                type: 'POST',
+                data: {
+                    status: status,
+                    productId: productId,
+                    _token: token // Include CSRF token
+                },
+                success: function(response) {
+                    console.log(response);
+                    $('#ordersContainer').html(response.html);
+                    acceptOrder();
+                },
+                error: function(xhr) {
+                    console.error('Error occurred while fetching orders.');
+                }
+            });
+        });
+    });
+</script>
+
 <style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-toggle {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        color: #495057;
+        padding: 0.375rem 0.75rem;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+    }
+
+    .dropdown-menu a {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: #343a40;
+        text-decoration: none;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #f8f9fa;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
 
     .swiper-button-next,
     .swiper-button-prev {
@@ -138,7 +263,5 @@
         object-fit: cover;
         object-position: center;
     }
-
-
 </style>
 @endsection

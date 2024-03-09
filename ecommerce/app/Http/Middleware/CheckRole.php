@@ -14,17 +14,13 @@ class CheckRole
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $role)
     {
-        // if (auth()->user()->role_id == 1) {
+        if (!$request->user() || ! $request->user()->hasRole($role)) {
+            abort(403, 'Unauthorized.');
+        }
 
-        //     // return view('/dashboard'); // Redirect to home if not authorized
-        // }
-        // else{
-        //     return redirect('/home');
-        // }
         return $next($request);
-
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -12,10 +13,14 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request) 
     {
-        $orders = Order::all(); // Fetch all orders from the database
-        return view('orders.index', compact('orders')); // Pass orders data to the view
+        $status = $request->input('status'); // Get the status filter from the request
+
+        // Filter orders based on status
+        $orders = Order::where('status', 'created')->latest()->get();
+    
+        return view('orders.index', compact('orders'));
     }
 
     /**
@@ -92,4 +97,63 @@ class OrderController extends Controller
         // Return orders data as JSON response
         return response()->json($orders);
     }
+
+    public function accept($id) {
+        // Find the order
+        $order = Order::findOrFail($id);
+        
+        // Update order status to completed
+        $order->status = 'completed';
+        $order->save();
+        
+        // Find the product associated with the order
+        $product = Product::findOrFail($order->product_id);
+        
+        // Update the product
+        if ($product->available_stock > 0) {
+            // Decrease available stock by 1
+            $product->available_stock -= 1;
+            $product->save();
+        }
+        
+        // Check if available stock is 0 and update product status accordingly
+        if ($product->available_stock == 0) {
+            $product->is_activ = 0;
+            $product->save();
+        }
+        
+        // Redirect back or to any other appropriate page
+        return redirect()->back()->with('success', 'Order accepted successfully');
+    }
+    
+
+    public function statusWiseOrder(Request $request)
+    {
+        // dd($request);
+        $status = $request->input('status');
+        $productId = $request->input('productId');
+        // dd($request);
+        $ordersQuery = Order::query();
+
+        // if ($status) {
+        //     $ordersQuery->where('status', $status);
+        // }
+        
+        $orders = $ordersQuery->where('product_id', $productId)
+        ->join('users', 'orders.user_id', '=', 'users.id')
+        ->select('orders.*', 'users.name as user_name', 'users.email')
+        ->when($request->has('status'), function ($query) use ($request) {
+            return $query->where('status', $request->status);
+        })
+        ->latest()
+        ->take(10)
+        ->get();
+        // dd($orders);
+        // Render the HTML for the list of orders
+        $html = view('orders.order_list', compact('orders'))->render();
+
+        // Return the HTML in the response
+        return response()->json(['html' => $html]);
+    }
+
 }

@@ -24,7 +24,7 @@ Route::get('/', function () {
 
 
 
-Route::middleware(['auth', 'role'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     // Route::resource('products', ProductController::class);
     // Route for showing the form to add a new product
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
@@ -52,7 +52,8 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/products/{productId}/orders', [OrderController::class, 'getOrdersForProduct'])->name('products.orders');
     Route::post('/products/deleteSelected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
-
+    Route::post('/orders/{id}/accept', [OrderController::class, 'accept'])->name('orders.accept');
+    Route::post('/orders/statusWiseOrder', [OrderController::class, 'statusWiseOrder'])->name('orders.statusWiseOrder');
 });
 
 // Auth routes
