@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckRole
+class CheckUserRole
 {
     /**
      * Handle an incoming request.
@@ -16,15 +16,12 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next)
     {
-        // if (auth()->user()->role_id == 1) {
+        if ($request->user() && $request->user()->role_id == '1') {
+            return $next($request);
+        } else {
+            return redirect('/');
+        }
 
-        //     // return view('/dashboard'); // Redirect to home if not authorized
-        // }
-        // else{
-        //     return redirect('/home');
-        // }
         return $next($request);
-
     }
-
 }

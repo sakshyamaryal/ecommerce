@@ -24,7 +24,7 @@ Route::get('/', function () {
 
 
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     // Route::resource('products', ProductController::class);
     // Route for showing the form to add a new product
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
