@@ -52,7 +52,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#">Home</a>
+              <a class="nav-link" href="{{ route('welcome') }}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Products</a>
@@ -97,7 +97,7 @@
           <div class="col-md-3">
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
-              <li><a href="{{ route('welcome') }}">Home</a></li>
+            <li><a href="{{ route('welcome') }}">Home</a></li>
               <li><a href="#">Products</a></li>
               <li><a href="#">Categories</a></li>
               <li><a href="#">About Us</a></li>
