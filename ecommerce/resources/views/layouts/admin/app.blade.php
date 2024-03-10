@@ -103,10 +103,7 @@
                                 @csrf
                             </form>
                             <a class="nav-link d-block" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-
-
-                                Admin, <b>Logout</b>
-
+                            {{ auth()->user()->name }}, <b>Logout</b>
                             </a>
                         </li>
                     </ul>
