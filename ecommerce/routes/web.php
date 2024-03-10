@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,9 +57,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/products/deleteSelected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
     Route::post('/orders/{id}/accept', [OrderController::class, 'accept'])->name('orders.accept');
     Route::post('/orders/statusWiseOrder', [OrderController::class, 'statusWiseOrder'])->name('orders.statusWiseOrder');
-    Route::get('/reports', [DashboardController::class, 'generateReport'])->name('admin.report');
+    Route::get('/reports', [ReportController::class, 'generateReport'])->name('admin.report');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+    Route::post('/reports/filter', [ReportController::class, 'filterReport'])->name('admin.report.filter');
 });
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');

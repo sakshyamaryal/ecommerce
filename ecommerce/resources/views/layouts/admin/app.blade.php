@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Diagonal Technology</title>
+    <title>Diagonal</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <!-- https://fonts.google.com/specimen/Roboto -->
     <link href="{{ asset('css/fontawesome.min.css') }}" rel="stylesheet">
@@ -53,17 +53,20 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <!-- <a class="nav-link dropdown-toggle" href="{{ route('admin.report', ['type' => 'daily']) }}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+                            <a class="nav-link dropdown-toggle" href="{{ route('admin.report', ['type' => 'daily']) }}" >
                                 <i class="far fa-file-alt"></i>
+                                
                                 <span>
-                                    Reports <i class="fas fa-angle-down"></i>
+                                    Reports 
+                                    <!-- <i class="fas fa-angle-down"></i> -->
                                 </span>
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('admin.report', ['type' => 'daily']) }}">Daily Report</a>
                                 <a class="dropdown-item" href="{{ route('admin.report', ['type' => 'weekly']) }}">Weekly Report</a>
                                 <a class="dropdown-item" href="{{ route('admin.report', ['type' => 'yearly']) }}">Yearly Report</a>
-                            </div>
+                            </div> -->
                         </li>
 
 
