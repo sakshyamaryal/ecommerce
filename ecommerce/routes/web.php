@@ -23,6 +23,9 @@ use App\Http\Controllers\ReportController;
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 
+Route::post('/addToFavorites', [ProductController::class, 'addToFavorites'])->name('addToFavorites');
+Route::post('/makeOrder', [OrderController::class, 'makeOrder'])->name('makeOrder');
+Route::post('/add-to-cart', [ProductController::class, 'addToCart'])->name('add-to-cart');
 
 
 

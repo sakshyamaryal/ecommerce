@@ -11,28 +11,28 @@
             <div class="swiper-container">
                 <div class="swiper-wrapper">
 
-                            @if($product->image)
-                            @php
-                            $images = explode(',', $product->image);
-                            @endphp
-                            @foreach($images as $image)
-                            <div class="swiper-slide">
-                            <div class="image-container">
-                                <img src="{{ asset('images/product_images/' . $image) }}" alt="{{ $product->product_name }}">
-                            </div>
-                            </div>
+                    @if($product->image)
+                    @php
+                    $images = explode(',', $product->image);
+                    @endphp
+                    @foreach($images as $image)
+                    <div class="swiper-slide">
+                        <div class="image-container">
+                            <img src="{{ asset('images/product_images/' . $image) }}" alt="{{ $product->product_name }}">
+                        </div>
+                    </div>
 
-                            @endforeach
-                            @else
-                            <div class="swiper-slide">
-                            <div class="image-container">
-                                <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}">
-                            </div>
-                            </div>
+                    @endforeach
+                    @else
+                    <div class="swiper-slide">
+                        <div class="image-container">
+                            <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}">
+                        </div>
+                    </div>
 
-                            @endif
+                    @endif
 
-                       
+
 
                 </div>
 
@@ -56,16 +56,16 @@
             <hr>
             <div class="container-fluid">
                 <div class="d-flex">
-                    <button type="button" class="btn border rounded-0 px-1">
+                    <button type="button" class="btn border btn-add rounded-0 px-1">
                         <i class="fas fa-plus"></i>
                     </button>
-                    <button type="button" class="btn border rounded-0 px-3">
+                    <button type="button" class="btn border number-qty rounded-0 px-3" data-quantity="1">
                         1
                     </button>
-                    <button type="button" class="btn border rounded-0 px-1">
+                    <button type="button" class="btn border btn-minus rounded-0 px-1">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-dark ms-3">
+                    <button type="button" class="btn btn-dark ms-3 add-to-cart" data-product-id="{{ $product->product_id }}">
                         <i class="fas fa-cart-plus"></i> ADD TO CART
                     </button>
                     <button class="btn border rounded-0 ms-4">
@@ -102,5 +102,64 @@
         <p>Like Products content goes here...</p>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Plus button click event
+        $('.btn-add').on('click', function() {
+            var quantityBtn = $(this).siblings('.number-qty');
+            var quantity = parseInt(quantityBtn.text()); // Get the current text content
+            quantityBtn.text(quantity + 1);
+            quantityBtn.data('quantity', quantity + 1);
+        });
+
+        // Minus button click event
+        $('.btn-minus').on('click', function() { // Corrected the class here
+            var quantityBtn = $(this).siblings('.number-qty');
+            var quantity = parseInt(quantityBtn.text()); // Get the current text content
+            if (quantity > 1) {
+                quantityBtn.text(quantity - 1);
+                quantityBtn.data('quantity', quantity - 1);
+            }
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+
+        $('.add-to-cart').on('click', function() {
+            var productId = $(this).data('product-id');
+            var quantity = $('.number-qty').data('quantity');
+            alert(quantity);
+            if ('{{ auth()->check() }}') {
+                $.ajax({
+                    url: '/add-to-cart',
+                    type: 'POST',
+                    data: {
+                        productId: productId,
+                        quantity: quantity
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.fire('Success', response.message, 'success');
+
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error
+                        console.error(error);
+                    }
+                });
+            } else {
+                Swal.fire('You must be logged in to continue', '', 'warning');
+
+            }
+        });
+
+    });
+</script>
 
 @endsection

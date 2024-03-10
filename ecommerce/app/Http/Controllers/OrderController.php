@@ -156,4 +156,19 @@ class OrderController extends Controller
         return response()->json(['html' => $html]);
     }
 
+    public function makeOrder(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $userId = auth()->user()->id; // Assuming the user is authenticated
+
+        // Create the order in the database
+        Order::create([
+            'product_id' => $productId,
+            'user_id' => $userId,
+            'status' => 'created'
+        ]);
+
+        return response()->json('Order placed successfully');
+    }
+
 }

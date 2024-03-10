@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="{{asset('css/styles.css')}}">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+
 </head>
 
 <body>
@@ -97,7 +101,7 @@
           <div class="col-md-3">
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
-            <li><a href="{{ route('welcome') }}">Home</a></li>
+              <li><a href="{{ route('welcome') }}">Home</a></li>
               <li><a href="#">Products</a></li>
               <li><a href="#">Categories</a></li>
               <li><a href="#">About Us</a></li>
@@ -149,7 +153,7 @@
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
   <script>
-   var swiper = new Swiper('.swiper-container', {
+    var swiper = new Swiper('.swiper-container', {
       slidesPerView: 1,
       spaceBetween: 10,
       navigation: {
@@ -171,7 +175,6 @@
       // Show the selected content
       document.getElementById(tab).classList.add('active');
     }
-    
   </script>
 
 </body>

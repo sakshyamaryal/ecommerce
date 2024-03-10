@@ -60,39 +60,47 @@
 
     <!-- Featured Products Slider -->
     <div class="container">
-    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-inner">
-            @php
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-inner">
+                @php
                 $chunks = array_chunk($products->toArray(), 4);
-            @endphp
-            @foreach ($chunks as $key => $chunk)
+                @endphp
+                @foreach ($chunks as $key => $chunk)
                 <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
                     <div class="row">
                         @foreach ($chunk as $product)
-                            <div class="col-md-3">
+                        <div class="col-md-3">
                             <a href="{{ route('product.show', ['id' => $product['id']]) }}">
-                                    <div class="card">
-                                        @if($product['image'])
-                                            @php
-                                                $images = explode(',', $product['image']);
-                                            @endphp
-                                            <img src="{{ asset('images/product_images/' . $images[0]) }}" class="card-img-top"  alt="{{ $product['name'] }}">
-                                        @else
-                                            No Image
-                                        @endif
-                                        <div class="card-body d-flex flex-column align-items-center">
-                                            <h5 class="card-title">{{ $product['name'] }}</h5>
-                                            <div class="rating">⭐⭐⭐⭐</div>
-                                            <p class="price">Rs. {{ $product['price'] }}</p>
-                                            <button class="add-to-cart-btn">Add to Cart</button>
-                                            <i class="favorite-icon far fa-heart"></i>
-                                        </div>
-                                    </div>
+                                <div class="card">
+                                    @if($product['image'])
+                                    @php
+                                    $images = explode(',', $product['image']);
+                                    @endphp
+                                    <img src="{{ asset('images/product_images/' . $images[0]) }}" class="card-img-top" alt="{{ $product['name'] }}">
+                                    @else
+                                    No Image
+                                    @endif
+                            </a>
+
+                            <div class="card-body d-flex flex-column align-items-center">
+                                <a href="{{ route('product.show', ['id' => $product['id']]) }}" style="color: black;">
+                                    <h5 class="card-title">{{ $product['name'] }}</h5>
+                                    <div class="rating">⭐⭐⭐⭐</div>
+                                    <p class="price">Rs. {{ $product['price'] }}</p>
                                 </a>
+                                <button class="add-to-cart-btn" data-btnproductid ="{{ $product['id'] }}" >Buy Now</button>
+                                @if ($product['like_id'])
+
+                                <i class="favorite-icon fas fa-heart text-danger" data-product-id="{{ $product['id'] }}" onclick="addToFavorites(`{{ $product['id'] }}`)"></i>
+                                @else
+                                <i class="favorite-icon far fa-heart" data-product-id="{{ $product['id'] }}" onclick="addToFavorites(`{{ $product['id'] }}`)"></i>
+                                @endif
                             </div>
-                        @endforeach
+                        </div>
                     </div>
+                    @endforeach
                 </div>
+            </div>
             @endforeach
         </div>
         <!-- <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
@@ -104,7 +112,7 @@
             <span class="visually-hidden">Next</span>
         </button> -->
     </div>
-</div>
+    </div>
 
 </section>
 <section class="latest-products">
@@ -118,39 +126,49 @@
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
         <div class="carousel-inner">
             @php
-                $chunks = array_chunk($products->toArray(), 4);
+            $chunks = array_chunk($products->toArray(), 4);
             @endphp
             @foreach ($chunks as $key => $chunk)
-                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                    <div class="row">
-                        @foreach ($chunk as $product)
-                            <div class="col-md-3">
-                            <a href="{{ route('product.show', ['id' => $product['id']]) }}">
-                                    <div class="card">
-                                        @if($product['image'])
-                                            @php
-                                                $images = explode(',', $product['image']);
-                                            @endphp
-                                            <img src="{{ asset('images/product_images/' . $images[0]) }}" class="card-img-top"  alt="{{ $product['name'] }}">
-                                        @else
-                                            No Image
-                                        @endif
-                                        <div class="card-body d-flex flex-column align-items-center">
-                                            <h5 class="card-title">{{ $product['name'] }}</h5>
-                                            <div class="rating">⭐⭐⭐⭐</div>
-                                            <p class="price">Rs. {{ $product['price'] }}</p>
-                                            <button class="add-to-cart-btn">Add to Cart</button>
-                                            <i class="favorite-icon far fa-heart"></i>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        @endforeach
+            <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                <div class="row">
+                    @foreach ($chunk as $product)
+                    <div class="col-md-3">
+                        <a href="{{ route('product.show', ['id' => $product['id']]) }}">
+                            <div class="card">
+                                @if($product['image'])
+                                @php
+                                $images = explode(',', $product['image']);
+                                @endphp
+                                <img src="{{ asset('images/product_images/' . $images[0]) }}" class="card-img-top" alt="{{ $product['name'] }}">
+                                @else
+                                No Image
+                                @endif
+                        </a>
+
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <a href="{{ route('product.show', ['id' => $product['id']]) }}" style="color: black;">
+
+                                <h5 class="card-title">{{ $product['name'] }}</h5>
+                                <div class="rating">⭐⭐⭐⭐</div>
+                                <p class="price">Rs. {{ $product['price'] }}</p>
+                            </a>
+                            <button class="add-to-cart-btn" data-btnproductid ="{{ $product['id'] }}" >Buy Now</button>
+
+                            @if ($product['like_id'])
+
+                            <i class="favorite-icon fas fa-heart text-danger" data-product-id="{{ $product['id'] }}" onclick="addToFavorites(`{{ $product['id'] }}`)"></i>
+                            @else
+                            <i class="favorite-icon far fa-heart" data-product-id="{{ $product['id'] }}" onclick="addToFavorites(`{{ $product['id'] }}`)"></i>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
-        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+        @endforeach
+    </div>
+    <!-- <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
@@ -160,5 +178,67 @@
         </button> -->
     </div>
 </section>
+
+<script>
+    
+    function addToFavorites(productId) {
+    if ('{{ auth()->check() }}') {
+        $.ajax({
+            url: '/addToFavorites',
+            type: 'POST',
+            data: {
+                product_id: productId
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Handle success
+                if (response === 'liked') {
+                    Swal.fire('Success', 'Product added to favorites!', 'success');
+                    $('i.favorite-icon[data-product-id="' + productId + '"]').addClass('text-danger');
+                    $('i.favorite-icon[data-product-id="' + productId + '"]').removeClass('far').addClass('fas').css('color', 'red');
+                } else if (response === 'unliked') {
+                    Swal.fire('Success', 'Product removed from favorites!', 'success');
+                    $('i.favorite-icon[data-product-id="' + productId + '"]').removeClass('text-danger');
+                    $('i.favorite-icon[data-product-id="' + productId + '"]').removeClass('fas').addClass('far').css('color', 'black');
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    } else {
+        Swal.fire('You must be logged in to continue', '', 'warning');
+    }
+}
+
+</script>
+<script>
+    $('.add-to-cart-btn').on('click', function() {
+        var productId = $(this).data('btnproductid');
+
+        $.ajax({
+            url: '/makeOrder',
+            type: 'POST',
+            data: {
+                product_id: productId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Handle success
+                Swal.fire('Success', 'Order placed successfully!', 'success');
+
+                // alert('Order placed successfully!');
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    });
+</script>
+
 
 @endsection

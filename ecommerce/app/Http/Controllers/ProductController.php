@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Favorite;
+use App\Models\UserCartItem;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -18,23 +20,23 @@ class ProductController extends Controller
 
     public function details($id, Request $request)
     {
-    $product = Product::findOrFail($id);
-    
-    // Retrieve orders associated with the product along with user names
-    $orders = Order::where('product_id', $id)
-        ->join('users', 'orders.user_id', '=', 'users.id')
-        ->select('orders.*', 'users.name as user_name', 'users.email')
-        ->when($request->has('status'), function ($query) use ($request) {
-            return $query->where('status', $request->status);
-        })
-        ->latest()
-        ->take(10)
-        ->get();
-        
+        $product = Product::findOrFail($id);
+
+        // Retrieve orders associated with the product along with user names
+        $orders = Order::where('product_id', $id)
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->select('orders.*', 'users.name as user_name', 'users.email')
+            ->when($request->has('status'), function ($query) use ($request) {
+                return $query->where('status', $request->status);
+            })
+            ->latest()
+            ->take(10)
+            ->get();
+
         // Pass both product and orders to the view
         return view('admin.productOrderDetail', compact('product', 'orders'));
     }
-    
+
     // Method for storing the newly created product
     public function store(Request $request)
     {
@@ -46,11 +48,11 @@ class ProductController extends Controller
             'is_active' => ['required', 'boolean'],
             'images.*' => ['required', 'image', 'max:2048'], // Each image max file size 2MB (2048 KB)
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first()], 422);
         }
-    
+
         $imageNames = [];
         $img_exist = false;
 
@@ -61,13 +63,13 @@ class ProductController extends Controller
                 $timestamp = now()->timestamp;
                 $itemName = strtolower(trim(str_replace(' ', '-', $request->itemname)));
                 $imageName = "{$itemName}{$i}_{$timestamp}.{$file->extension()}";
-                
+
                 // Ensure the directory exists or create it
                 $directory = 'images/product_images';
-        
+
                 // Move the file to the directory
                 $file->move(public_path($directory), $imageName);
-                
+
                 // Store the filename in the array
                 $imageNames[] = $imageName;
                 $i++;
@@ -91,11 +93,11 @@ class ProductController extends Controller
 
         $product->save();
 
-    
+
         return response()->json(['message' => 'Product created successfully'], 201); // Use HTTP status code 201 for successful creation
     }
-    
-    
+
+
 
     // Method for listing all products
     public function index(Request $request)
@@ -117,14 +119,14 @@ class ProductController extends Controller
         $product = Product::find($id);
         return view('products.edit', compact('product'));
     }
-    
+
 
     public function destroy(Product $product)
     {
         $product->delete();
 
         return redirect()->route('products.index')
-                        ->with('success', 'Product deleted successfully');
+            ->with('success', 'Product deleted successfully');
     }
 
     public function update(Request $request, $id)
@@ -150,25 +152,25 @@ class ProductController extends Controller
         // dd($request->hasFile('files'),$request->hasFile('images'));
         // dd();
         if ($request->hasFile('images')) {
-            
+
             $i = 0;
 
             foreach ($request->file('images') as $file) {
                 $timestamp = now()->timestamp;
                 $itemName = strtolower(trim(str_replace(' ', '-', $request->itemname)));
                 $imageName = "{$itemName}{$i}_{$timestamp}.{$file->extension()}";
-                
+
                 // Ensure the directory exists or create it
                 $directory = 'images/product_images';
-        
+
                 // Move the file to the directory
                 $file->move(public_path($directory), $imageName);
-                
+
                 // Store the filename in the array
                 $imageNames[] = $imageName;
                 $i++;
             }
-            
+
             $img_exist = true;
         }
 
@@ -183,7 +185,7 @@ class ProductController extends Controller
             'available_stock' => $request->input('available_stock'),
             'is_active' => $request->input('is_active'),
             'image' => $imagePathsString,
-            
+
         ]);
 
         return response()->json(['message' => 'Product updated successfully'], 200);
@@ -202,25 +204,70 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = DB::table('products')
-                    ->join('users', 'users.id', '=', 'products.added_by')
-                    ->select(
-                        'users.id AS user_id',
-                        'users.name AS user_name',
-                        'users.email AS user_email',
-                        'products.id AS product_id',
-                        'products.name AS product_name',
-                        'products.description AS product_description',
-                        'products.price AS product_price',
-                        'products.available_stock AS product_available_stock',
-                        'products.is_active AS product_is_active',
-                        'products.created_at AS product_created_at',
-                        'products.updated_at AS product_updated_at',
-                        'products.image'
-                    )
-                    ->where('products.id', $id)
-                    ->first();
+            ->join('users', 'users.id', '=', 'products.added_by')
+            ->select(
+                'users.id AS user_id',
+                'users.name AS user_name',
+                'users.email AS user_email',
+                'products.id AS product_id',
+                'products.name AS product_name',
+                'products.description AS product_description',
+                'products.price AS product_price',
+                'products.available_stock AS product_available_stock',
+                'products.is_active AS product_is_active',
+                'products.created_at AS product_created_at',
+                'products.updated_at AS product_updated_at',
+                'products.image'
+            )
+            ->where('products.id', $id)
+            ->first();
 
         return view('user.productdetail', compact('product'));
     }
 
+    public function addToFavorites(Request $request)
+    {
+        if (!$request->user()) {
+            return response()->json(['message' => 'You must be logged in to continue'], 401);
+        }
+
+        $productId = $request->input('product_id');
+        $user = $request->user();
+
+        // Check if the product is already liked by the user
+        $like = Favorite::where('user_id', $user->id)
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($like) {
+            // Product already liked, so remove like
+            $like->delete();
+            return response()->json('unliked');
+        } else {
+            // Product not liked, so add like
+            Favorite::create([
+                'user_id' => $user->id,
+                'product_id' => $productId
+            ]);
+            return response()->json('liked');
+        }
+    }
+
+    public function addToCart(Request $request)
+    {
+
+        $productId = $request->productId;
+        $quantity = $request->quantity;
+        $userId = auth()->user()->id;
+
+
+        $cartItem = new UserCartItem();
+        $cartItem->user_id = $userId;
+        $cartItem->product_id = $productId;
+        $cartItem->quantity = $quantity;
+        $cartItem->save();
+
+
+        return response()->json(['message' => 'Product added to cart successfully']);
+    }
 }
