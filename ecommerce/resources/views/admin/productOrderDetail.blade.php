@@ -8,33 +8,38 @@
             <div class="col-md-6">
                 <!-- Swiper -->
                 <div class="swiper-container">
-                    <div class="swiper-wrapper">
-                        <div class="d-flex flex-wrap justify-content-center">
+                <div class="swiper-wrapper">
+
                             @if($product->image)
                             @php
                             $images = explode(',', $product->image);
                             @endphp
                             @foreach($images as $image)
                             <div class="swiper-slide">
-                                <div class="image-container">
-                                    <img src="{{ asset('images/product_images/' . $image) }}" alt="{{ $product->name }}">
-                                </div>
+                            <div class="image-container">
+                                <img src="{{ asset('images/product_images/' . $image) }}" alt="{{ $product->product_name }}">
                             </div>
+                            </div>
+
                             @endforeach
                             @else
                             <div class="swiper-slide">
-                                <div class="image-container">
-                                    <img src="img/product-image.jpg" alt="{{ $product->name }}">
-                                </div>
+                            <div class="image-container">
+                                <img src="{{ asset($product->product_image) }}" alt="{{ $product->product_name }}">
                             </div>
-                            @endif
-                        </div>
-                    </div>
+                            </div>
 
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
+                            @endif
+
+                       
+
                 </div>
+
+                <div class="swiper-pagination"></div>
+
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
             </div>
 
             <div class="col-md-6">
