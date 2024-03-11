@@ -126,6 +126,17 @@
         </div>
  
 <script>
+        var latestHitsData = {!! json_encode($latestHits) !!};
+        var popularHitsData = {!! json_encode($popularHits) !!};
+        var featuredHitsData = {!! json_encode($featuredHits) !!};
+
+        // Initialize bar chart
+        var productSalesData = {!! json_encode($productSales) !!};
+
+        // Initialize pie chart
+        var userActivitiesData = {!! json_encode($userActivities) !!};
+        var cartItemsData = {!! json_encode($cartItems) !!};
+        
     $(document).ready(function () {
         $('.view-orders').on('click', function (e) {
             e.preventDefault();
