@@ -124,6 +124,17 @@
     </div>
 
     <script>
+        var latestHitsData = {!! json_encode($latestHits) !!};
+        var popularHitsData = {!! json_encode($popularHits) !!};
+        var featuredHitsData = {!! json_encode($featuredHits) !!};
+
+        // Initialize bar chart
+        var productSalesData = {!! json_encode($productSales) !!};
+
+        // Initialize pie chart
+        var userActivitiesData = {!! json_encode($userActivities) !!};
+        var cartItemsData = {!! json_encode($cartItems) !!};
+
         Chart.defaults.global.defaultFontColor = 'white';
         let ctxLine,
             ctxBar,
@@ -147,6 +158,29 @@
                 updateBarChart();
             });
         })
+
+        $(document).ready(function() {
+            // Function to handle click on navigation links
+            $('.nav-link').on('click', function() {
+                // Remove active class from all links
+                $('.nav-link').removeClass('active');
+                // Add active class to the clicked link
+                $(this).addClass('active');
+                // Store the active link in session storage
+                sessionStorage.setItem('activeLink', $(this).attr('href'));
+            });
+
+            // Retrieve active link from session storage on page load
+            var activeLink = sessionStorage.getItem('activeLink');
+            if (activeLink) {
+                // Remove active class from all links
+                $('.nav-link').removeClass('active');
+                // Add active class to the link retrieved from session storage
+                $('.nav-link[href="' + activeLink + '"]').addClass('active');
+            }
+        });
+        
+
     </script>
 </body>
 

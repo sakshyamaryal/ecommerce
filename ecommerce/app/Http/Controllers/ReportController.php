@@ -16,19 +16,20 @@ class ReportController extends Controller
         $type = $request->input('type', 'daily'); // Default to daily report if no type specified
     
         // Implement logic to generate reports based on $type
-        switch ($type) {
-            case 'daily':
-                $reportData = $this->getDailyReport();
-                break;
-            case 'weekly':
-                $reportData = $this->getWeeklyReport();
-                break;
-            case 'yearly':
-                $reportData = $this->getYearlyReport();
-                break;
-            default:
-                abort(404); // Handle invalid report types
-        }
+        // switch ($type) {
+        //     case 'daily':
+        //         $reportData = $this->getDailyReport();
+        //         break;
+        //     case 'weekly':
+        //         $reportData = $this->getWeeklyReport();
+        //         break;
+        //     case 'yearly':
+        //         $reportData = $this->getYearlyReport();
+        //         break;
+        //     default:
+        //         abort(404); // Handle invalid report types
+        // }
+        $reportData = $this->getReport();
     
         // Calculate total revenue
         $totalRevenue = $reportData->sum('total_price');
@@ -71,6 +72,15 @@ class ReportController extends Controller
             ->join('products', 'orders.product_id', '=', 'products.id')
             ->select('products.name', DB::raw('COUNT(*) as total_quantity_sold'), DB::raw('SUM(products.price * 1) as total_price'))
             ->whereYear('orders.created_at', now()->year)
+            ->where('orders.status', 'completed')
+            ->groupBy('products.name')
+            ->get();
+    }
+    private function getReport()
+    {
+        return DB::table('orders')
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->select('products.name', DB::raw('COUNT(*) as total_quantity_sold'), DB::raw('SUM(products.price * 1) as total_price'))
             ->where('orders.status', 'completed')
             ->groupBy('products.name')
             ->get();

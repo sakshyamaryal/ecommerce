@@ -32,32 +32,22 @@ function drawLineChart() {
           "June",
           "July"
         ],
-        datasets: [
-          {
-            label: "Latest Hits",
-            data: [88, 68, 79, 57, 50, 55, 70],
-            fill: false,
-            borderColor: "rgb(75, 192, 192)",
-            cubicInterpolationMode: "monotone",
-            pointRadius: 0
-          },
-          {
-            label: "Popular Hits",
-            data: [33, 45, 37, 21, 55, 74, 69],
-            fill: false,
-            borderColor: "rgba(255,99,132,1)",
-            cubicInterpolationMode: "monotone",
-            pointRadius: 0
-          },
-          {
-            label: "Featured",
-            data: [44, 19, 38, 46, 85, 66, 79],
-            fill: false,
-            borderColor: "rgba(153, 102, 255, 1)",
-            cubicInterpolationMode: "monotone",
-            pointRadius: 0
-          }
-        ]
+        datasets: [{
+          label: 'Latest Products',
+          data: latestHitsData,
+          borderColor: 'rgb(75, 192, 192)',
+          fill: false
+      }, {
+          label: 'Popular Products',
+          data: popularHitsData,
+          borderColor: 'rgba(255,99,132,1)',
+          fill: false
+      }, {
+          label: 'Featured Products',
+          data: featuredHitsData,
+          borderColor: 'rgba(153, 102, 255, 1)',
+          fill: false
+      }]
       },
       options: optionsLine
     };
@@ -81,7 +71,7 @@ function drawBarChart() {
             },
             scaleLabel: {
               display: true,
-              labelString: "Hits"
+              labelString: "Hit Products"
             }
           }
         ]
@@ -108,8 +98,8 @@ function drawBarChart() {
         labels: ["Red", "Aqua", "Green", "Yellow", "Purple", "Orange", "Blue"],
         datasets: [
           {
-            label: "# of Hits",
-            data: [33, 40, 28, 49, 58, 38, 44],
+            label: "Cart Item Datas",
+            data: cartItemsData.map(item => item.cart_count),
             backgroundColor: [
               "#F7604D",
               "#4ED6B8",
@@ -157,19 +147,16 @@ function drawPieChart() {
     configPie = {
       type: "pie",
       data: {
-        datasets: [
-          {
-            data: [18.24, 6.5, 9.15],
-            backgroundColor: ["#F7604D", "#4ED6B8", "#A8D582"],
-            label: "Storage"
-          }
-        ],
-        labels: [
-          "Used Storage (18.240GB)",
-          "System Storage (6.500GB)",
-          "Available Storage (9.150GB)"
-        ]
-      },
+        labels: userActivitiesData.map(item => item.name),
+        datasets: [{
+            data: userActivitiesData.map(item => item.activity_count),
+            backgroundColor: [
+                '#F7604D',
+                '#4ED6B8',
+                '#A8D582'
+            ]
+        }]
+    },
       options: optionsPie
     };
 
