@@ -88,9 +88,12 @@
         <h2 style="font-size: 15px">Featured</h2>
 
         <!-- Featured Product 1 -->
+        @if(count($products) > 0)
         <div class="products-container">
-          @php $totalProducts = count($products); $startIndex = $totalProducts - 3; @endphp
-          @for($i = $startIndex; $i < $totalProducts; $i++) @php $product=$products[$i]; @endphp <div class="featured-product d-flex">
+          @php
+          $totalProducts = count($products);
+          $startIndex = $totalProducts - 3;
+          if ($startIndex < 0) $startIndex=0; // Ensure startIndex doesn't go below 0 @endphp @for($i=$startIndex; $i < $totalProducts; $i++) @php $product=$products[$i]; @endphp <div class="featured-product d-flex">
             <div class="featured-image-container d-flex justify-content-center align-items-center">
               <!-- <img src="{{ $product->image }}" alt="{{ $product->name }}" width="100" height="100"> -->
               <img src="https://iplanet.one/cdn/shop/files/iPhone_15_Pro_Max_Natural_Titanium_PDP_Image_Position-1__en-IN_fb4edf23-fd9d-4921-ab06-aec128ba2698.jpg?v=1695436281" alt="Brand 1 Logo" width="100" height="100">
@@ -107,11 +110,13 @@
         <hr>
         @endfor
       </div>
-
-
+      @else
+      <p>No featured products available</p>
+      @endif
 
     </div>
   </div>
+
 
 
   <div class="col-9">
@@ -119,9 +124,9 @@
       @foreach($products as $product)
       <div class="product-item">
         <div class="product-image-container">
-          @if($product['image'])
+          @if($product->image)
           @php
-          $images = explode(',', $product['image']);
+          $images = explode(',', $product->image);
           @endphp
           <img src="{{ asset('images/product_images/' . $images[0]) }}" alt="{{ $product->name }}" class="product-image">
           @else
@@ -129,7 +134,10 @@
           @endif
           <!-- <img src="https://www.olizstore.com/media/catalog/product/cache/08c45697224ec88f7e476fd58ef94e16/m/a/macbook-air-space-gray-config-201810_3.jpeg" alt="{{ $product->name }}" class="product-image"> -->
         </div>
-        <h3 class="product-title">{{ $product->name }}</h3>
+        <a href="{{ route('product.show', ['id' => $product->id]) }}" style="color: black;">
+          <h3 class="product-title">{{ $product->name }}</h3>
+        </a>
+
         <p class="product-review">⭐⭐⭐⭐</p>
         <div class="product-price-container">
           <img src="https://via.placeholder.com/20x20" alt="Product Image" class="product-image">

@@ -285,11 +285,11 @@ class ProductController extends Controller
         $userId = Auth::id();
         $products = Product::leftJoin('user_product_likes', function ($join) use ($userId) {
             $join->on('products.id', '=', 'user_product_likes.product_id')
-                 ->where('user_product_likes.user_id', '=', $userId);
+                ->where('user_product_likes.user_id', '=', $userId);
         })
-        ->select('products.*', 'user_product_likes.id AS like_id')
-        ->get();
-        
+            ->select('products.*', 'user_product_likes.id AS like_id')
+            ->get();
+
         return view('user.product', compact('products'));
     }
 
@@ -311,7 +311,15 @@ class ProductController extends Controller
 
     public function wish()
     {
-        return view('user.wishlist');
+        $userId = Auth::id();
+
+        $products = Product::select('products.*', 'user_product_likes.id AS like_id')
+            ->Join('user_product_likes', function ($join) use ($userId) {
+                $join->on('products.id', '=', 'user_product_likes.product_id')
+                    ->where('user_product_likes.user_id', '=', $userId);
+            })
+            ->get();
+        return view('user.wishlist', compact('products'));
     }
 
 
@@ -322,31 +330,31 @@ class ProductController extends Controller
         $productId = trim($request->input('product_id'));
         $quantity = trim($request->input('quantity'));
         $userId = auth()->user()->id;
-    
+
         // // Dump and die to inspect the received data
         // dd($productId, $quantity);
-    
+
         // Find the cart item for the user and product
         $cartItem = UserCartItem::where('user_id', $userId)
             ->where('product_id', $productId);
-            // ->first();
-    
+        // ->first();
+
         // If the cart item exists, delete it
         if ($cartItem) {
             $cartItem->delete();
         }
-    
+
         // Create a new cart item with the updated quantity
         $newCartItem = new UserCartItem();
         $newCartItem->user_id = $userId;
         $newCartItem->product_id = $productId;
         $newCartItem->quantity = $quantity;
         $newCartItem->save();
-    
+
         // Return a success response
         return response()->json(['message' => 'Cart updated successfully']);
     }
-    
+
 
     public function deleteItem(Request $request)
     {
@@ -357,7 +365,7 @@ class ProductController extends Controller
         // Find the cart item for the user and product
         $cartItem = UserCartItem::where('user_id', $userId)
             ->where('product_id', $productId);
-            // ->first();
+        // ->first();
 
         // If the cart item exists, delete it
         if ($cartItem) {

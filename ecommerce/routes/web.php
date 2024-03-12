@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController; // Import AuthController
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProductController; 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
@@ -51,7 +51,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Route::get('/dashboard', function () {
     //     return view('admin.dashboard');
     // });
-    
+
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::resource('products', ProductController::class)->except(['update']);
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
@@ -61,7 +61,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/orders/{id}/accept', [OrderController::class, 'accept'])->name('orders.accept');
     Route::post('/orders/statusWiseOrder', [OrderController::class, 'statusWiseOrder'])->name('orders.statusWiseOrder');
     Route::get('/reports', [ReportController::class, 'generateReport'])->name('admin.report');
-    
+
     Route::post('/reports/filter', [ReportController::class, 'filterReport'])->name('admin.report.filter');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -77,9 +77,7 @@ Route::get('/productList', [ProductController::class, 'productList'])->name('pro
 
 
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
-Route::get('/wish',[ProductController::class,'wish'])->name('wish');
-Route::post('/update-cart',[ProductController::class,'updateCart'])->name('cart.update');
-Route::post('/delete-item',[ProductController::class,'deleteItem'])->name('cart.delete');
+Route::get('/wish', [ProductController::class, 'wish'])->name('wish');
+Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('cart.update');
+Route::post('/delete-item', [ProductController::class, 'deleteItem'])->name('cart.delete');
 Route::post('/checkoutitems', [OrderController::class, 'checkoutitems'])->name('orders.checkoutitems');
-
-
