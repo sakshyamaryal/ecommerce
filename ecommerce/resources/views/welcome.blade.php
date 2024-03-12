@@ -5,7 +5,7 @@
     <div id="bannerCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
         <div class="carousel-inner">
             <!-- Slide 1 -->
-            <div class="carousel-item active" style="background-image: url('./images/iphone.jpg');">
+            <div class="carousel-item active" style="background-image: url('https://www.olizstore.com/media/wysiwyg/easyslider/4/iphone15probanner.jpeg');">
                 <div class="overlay">
                     <div class="banner-text">
                         <h2>Discover Our Latest iPhones</h2>
@@ -126,7 +126,7 @@
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
         <div class="carousel-inner">
             @php
-            $chunks = array_chunk($products->toArray(), 4);
+            $chunks = array_chunk($latestproducts->toArray(), 4);
             @endphp
             @foreach ($chunks as $key => $chunk)
             <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">

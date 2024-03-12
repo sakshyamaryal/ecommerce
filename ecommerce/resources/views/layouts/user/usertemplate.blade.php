@@ -42,7 +42,7 @@
   <div class="main">
     <div class="d-flex justify-content-between align-items-center container">
       <!-- Logo -->
-      <h1 class="py-2 fw-bold" style="color: #991527">DIAOGNAL</h1>
+      <h1 class="py-2 fw-bold" style="color: #991527">diagonal</h1>
 
       <div class="d-flex justify-content-center align-items-center mt-3">
         <div class="input-group">
@@ -132,7 +132,7 @@
           <div class="col-md-3">
             <h5>Contact Us</h5>
             <p>Address: 123 XYZ, City, Country</p>
-            <p>Email: info@diaognal.com</p>
+            <p>Email: info@diagonal.com</p>
             <p>Phone: 123-456-7890</p>
           </div>
           <div class="col-md-3">
