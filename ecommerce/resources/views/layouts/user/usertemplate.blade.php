@@ -12,6 +12,28 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
   <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+  <style>
+    #navbar .user-section {
+    position: relative; 
+}
+
+#navbar .user-section #logout-form { 
+    display: none;     
+    position: absolute; 
+    top: 10;         
+    right: 0;        
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    padding: 5px;  
+    border-radius: 5px;       
+}
+
+#navbar .user-section:hover #logout-form {
+    display: block;  
+}
+
+  </style>
+
 
 </head>
 
@@ -20,7 +42,7 @@
   <div class="main">
     <div class="d-flex justify-content-between align-items-center container">
       <!-- Logo -->
-      <h1 class="py-2">DIAOGNAL</h1>
+      <h1 class="py-2 fw-bold" style="color: #991527">DIAOGNAL</h1>
 
       <div class="d-flex justify-content-center align-items-center mt-3">
         <div class="input-group">
@@ -33,17 +55,32 @@
 
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center">
-          <i class="fas fa-phone-alt fa-lg mx-2"></i>
+          <img src="https://www.olizstore.com/media/wysiwyg/smartwave/porto/homepage/04/shop4_header_phone.png" alt="" srcset="">
 
           <div class="d-flex flex-column">
-            <p class="mx-2 mb-0">CALL US NOW</p>
-            <p class="mx-2 mb-0">9861060000 / 9810050001</p>
+            <p class="mx-2 mb-0 text-muted" style="font-size: 14px; font-weight:700;">CALL US NOW</p>
+            <p class="mx-2 mb-0" style="font-size: 14px; font-weight:700;">9861060000 / 9810050001</p>
           </div>
         </div>
 
-        <i class="fa-regular fa-user-circle fa-lg mx-2"></i>
-        <i class="fa-regular fa-heart fa-lg mx-2"></i>
-        <i class="fas fa-shopping-bag fa-lg mx-2"></i>
+        <div class="d-flex justify-content-between" id="navbar">
+          <div class="user-section">
+              @auth
+                  <span class="mx-2 welcome-text">Welcome, {{ auth()->user()->name }}</span>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                      @csrf
+                      <button type="submit" class="btn text-decoration-none text-dark" id="logout-btn">Logout</button>
+                  </form>
+              @else
+                  <a href="{{route('login')}}" style="color: #000;"><i class="fa-regular fa-user-circle fa-2x mx-2"></i></a>
+              @endauth
+          </div>
+      </div>
+      
+      
+      
+      
+      
       </div>
     </div>
     <hr>
@@ -59,11 +96,11 @@
               <a class="nav-link" href="{{ route('welcome') }}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Products</a>
+              <a class="nav-link" href="{{route('productList')}}">Products</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="#">Categories</a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="#">About Us</a>
             </li>
@@ -71,10 +108,10 @@
               <a class="nav-link" href="#">Contact Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Specials</a>
+              <a class="nav-link" href="{{route('wish')}}">WishList</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Cart</a>
+              <a class="nav-link"  href="{{route('cart')}}">Cart</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Account</a>

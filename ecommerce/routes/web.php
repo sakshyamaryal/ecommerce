@@ -61,10 +61,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/orders/{id}/accept', [OrderController::class, 'accept'])->name('orders.accept');
     Route::post('/orders/statusWiseOrder', [OrderController::class, 'statusWiseOrder'])->name('orders.statusWiseOrder');
     Route::get('/reports', [ReportController::class, 'generateReport'])->name('admin.report');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
     Route::post('/reports/filter', [ReportController::class, 'filterReport'])->name('admin.report.filter');
 });
-
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
 // Auth routes
@@ -72,3 +72,14 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.submit');
 Route::get('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'register'])->name('signup.submit');
+
+Route::get('/productList', [ProductController::class, 'productList'])->name('productList');
+
+
+Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
+Route::get('/wish',[ProductController::class,'wish'])->name('wish');
+Route::post('/update-cart',[ProductController::class,'updateCart'])->name('cart.update');
+Route::post('/delete-item',[ProductController::class,'deleteItem'])->name('cart.delete');
+Route::post('/checkoutitems', [OrderController::class, 'checkoutitems'])->name('orders.checkoutitems');
+
+

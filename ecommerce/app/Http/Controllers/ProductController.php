@@ -9,6 +9,7 @@ use App\Models\Favorite;
 use App\Models\UserCartItem;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -203,8 +204,13 @@ class ProductController extends Controller
 
     public function show($id)
     {
+        $userId = Auth::id();
         $product = DB::table('products')
             ->join('users', 'users.id', '=', 'products.added_by')
+            ->leftJoin('user_product_likes', function ($join) use ($userId) {
+                $join->on('products.id', '=', 'user_product_likes.product_id')
+                    ->where('user_product_likes.user_id', '=', $userId);
+            })
             ->select(
                 'users.id AS user_id',
                 'users.name AS user_name',
@@ -217,10 +223,12 @@ class ProductController extends Controller
                 'products.is_active AS product_is_active',
                 'products.created_at AS product_created_at',
                 'products.updated_at AS product_updated_at',
-                'products.image'
+                'products.image',
+                'user_product_likes.id AS like_id'
             )
             ->where('products.id', $id)
             ->first();
+
 
         return view('user.productdetail', compact('product'));
     }
@@ -269,5 +277,87 @@ class ProductController extends Controller
 
 
         return response()->json(['message' => 'Product added to cart successfully']);
+    }
+
+
+    public function productList()
+    {
+        $products = Product::all();
+        return view('user.product', compact('products'));
+    }
+
+    public function cart()
+    {
+
+        $userId = auth()->id();
+
+
+        $productsInCart = DB::table('user_cart_items')
+            ->where('user_id', $userId)
+            ->join('products', 'user_cart_items.product_id', '=', 'products.id')
+            ->select('products.*', 'user_cart_items.quantity')
+            ->get();
+
+        return view('user.addToCart', ['productsInCart' => $productsInCart]);
+    }
+
+
+    public function wish()
+    {
+        return view('user.wishlist');
+    }
+
+
+
+    public function updateCart(Request $request)
+    {
+        // Retrieve product ID and quantity from the request and trim them
+        $productId = trim($request->input('product_id'));
+        $quantity = trim($request->input('quantity'));
+        $userId = auth()->user()->id;
+    
+        // // Dump and die to inspect the received data
+        // dd($productId, $quantity);
+    
+        // Find the cart item for the user and product
+        $cartItem = UserCartItem::where('user_id', $userId)
+            ->where('product_id', $productId);
+            // ->first();
+    
+        // If the cart item exists, delete it
+        if ($cartItem) {
+            $cartItem->delete();
+        }
+    
+        // Create a new cart item with the updated quantity
+        $newCartItem = new UserCartItem();
+        $newCartItem->user_id = $userId;
+        $newCartItem->product_id = $productId;
+        $newCartItem->quantity = $quantity;
+        $newCartItem->save();
+    
+        // Return a success response
+        return response()->json(['message' => 'Cart updated successfully']);
+    }
+    
+
+    public function deleteItem(Request $request)
+    {
+        // Retrieve product ID from the request
+        $productId = $request->input('product_id');
+        $userId = auth()->id(); // Assuming you're using Laravel's built-in authentication
+
+        // Find the cart item for the user and product
+        $cartItem = UserCartItem::where('user_id', $userId)
+            ->where('product_id', $productId);
+            // ->first();
+
+        // If the cart item exists, delete it
+        if ($cartItem) {
+            $cartItem->delete();
+        }
+
+        // Return a success response
+        return response()->json(['message' => 'Item deleted from cart']);
     }
 }

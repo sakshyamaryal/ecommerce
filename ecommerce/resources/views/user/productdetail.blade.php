@@ -68,9 +68,14 @@
                     <button type="button" class="btn btn-dark ms-3 add-to-cart" data-product-id="{{ $product->product_id }}">
                         <i class="fas fa-cart-plus"></i> ADD TO CART
                     </button>
-                    <button class="btn border rounded-0 ms-4">
-                        <i class="fa-regular fa-heart fa-lg"></i>
-                    </button>
+                    <button class="btn border rounded-0 ms-4 favorite-button" data-productfav="{{ $product->product_id }}">
+                    @if($product->like_id)
+                        <i class="fa-solid fav-icon fa-heart fa-lg text-danger"></i>
+                    @else
+                        <i class="fa-regular fav-icon fa-heart fa-lg"></i>
+                    @endif
+                </button>
+
                     <button class="btn border rounded-0 ms-4">
                         <i class="fa-solid fa-chart-simple"></i>
                     </button>
@@ -108,15 +113,14 @@
         // Plus button click event
         $('.btn-add').on('click', function() {
             var quantityBtn = $(this).siblings('.number-qty');
-            var quantity = parseInt(quantityBtn.text()); // Get the current text content
+            var quantity = parseInt(quantityBtn.text());
             quantityBtn.text(quantity + 1);
             quantityBtn.data('quantity', quantity + 1);
         });
 
-        // Minus button click event
-        $('.btn-minus').on('click', function() { // Corrected the class here
+        $('.btn-minus').on('click', function() { 
             var quantityBtn = $(this).siblings('.number-qty');
-            var quantity = parseInt(quantityBtn.text()); // Get the current text content
+            var quantity = parseInt(quantityBtn.text()); 
             if (quantity > 1) {
                 quantityBtn.text(quantity - 1);
                 quantityBtn.data('quantity', quantity - 1);
@@ -160,6 +164,45 @@
         });
 
     });
+
+    $('.favorite-button').on('click', function() {
+    var productId = $(this).data('productfav');
+    var isFavorite = $(this).find('i').hasClass('text-danger');
+
+    if ('{{ auth()->check() }}') {
+        $.ajax({
+            url: '/addToFavorites',
+            type: 'POST',
+            data: {
+                product_id: productId,
+                is_favorite: isFavorite ? 0 : 1 // 1 if adding to favorites, 0 if removing
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+             
+                if (response === 'liked') {
+                    Swal.fire('Success', 'Product added to favorites!', 'success');
+                    $('.favorite-button[data-productfav="' + productId + '"]').addClass('text-danger');
+                    $('.favorite-button[data-productfav="' + productId + '"] i').removeClass('fa-regular').addClass('fa-solid').css('color', 'red');
+                } else if (response === 'unliked') {
+                    Swal.fire('Success', 'Product removed from favorites!', 'success');
+                    $('.favorite-button[data-productfav="' + productId + '"]').removeClass('text-danger');
+                    $('.favorite-button[data-productfav="' + productId + '"] i').removeClass('fa-solid').addClass('fa-regular').css('color', 'black');
+                }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    } else {
+        Swal.fire('You must be logged in to continue', '', 'warning');
+    }
+});
+
 </script>
 
 @endsection

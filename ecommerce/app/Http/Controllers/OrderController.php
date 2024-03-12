@@ -171,4 +171,21 @@ class OrderController extends Controller
         return response()->json('Order placed successfully');
     }
 
+    public function checkoutitems(Request $request)
+    {
+        // Retrieve product IDs from the request
+        $productIds = $request->input('product_ids', []);
+
+        foreach ($productIds as $productId) {
+            $order = new Order();
+            $order->user_id = auth()->id();
+            $order->product_id = $productId;
+            $order->status = 'created';
+            $order->save();
+        }
+
+        // Return a success response
+        return response()->json(['message' => 'Order placed successfully']);
+    }
+
 }
