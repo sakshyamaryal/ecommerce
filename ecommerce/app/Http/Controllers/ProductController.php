@@ -179,15 +179,26 @@ class ProductController extends Controller
         $imagePathsString = implode(',', $imageNames);
         // dd($imagePathsString);
         // Update product with new data and image paths
-        $product->update([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'available_stock' => $request->input('available_stock'),
-            'is_active' => $request->input('is_active'),
-            'image' => $imagePathsString,
-
-        ]);
+        if (!empty($imagePathsString)) {
+            $product->update([
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'price' => $request->input('price'),
+                'available_stock' => $request->input('available_stock'),
+                'is_active' => $request->input('is_active'),
+                'image' => $imagePathsString,
+    
+            ]);
+        }else {
+            $product->update([
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'price' => $request->input('price'),
+                'available_stock' => $request->input('available_stock'),
+                'is_active' => $request->input('is_active'),
+            ]);
+        }
+        
 
         return response()->json(['message' => 'Product updated successfully'], 200);
     }
