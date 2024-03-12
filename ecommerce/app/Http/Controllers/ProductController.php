@@ -280,19 +280,38 @@ class ProductController extends Controller
     }
 
 
-    public function productList()
+    public function productList(Request $request)
     {
         $userId = Auth::id();
-        $products = Product::leftJoin('user_product_likes', function ($join) use ($userId) {
+        $sortBy = $request->input('sortBy', 'position');
+        $direction = $request->input('direction', 'asc');
+    
+        $productsQuery = Product::leftJoin('user_product_likes', function ($join) use ($userId) {
             $join->on('products.id', '=', 'user_product_likes.product_id')
                 ->where('user_product_likes.user_id', '=', $userId);
-        })
-            ->select('products.*', 'user_product_likes.id AS like_id')
-            ->get();
-
+        });
+    
+        // Apply sorting based on the selected option
+        switch ($sortBy) {
+            case 'position':
+                $productsQuery->orderBy('products.id', $direction);
+                break;
+            case 'name':
+                $productsQuery->orderBy('products.name', $direction);
+                break;
+            case 'price':
+                $productsQuery->orderBy('products.price', $direction);
+                break;
+            default:
+                $productsQuery->orderBy('products.id', 'asc');
+        }
+    
+        // Fetch the products
+        $products = $productsQuery->select('products.*', 'user_product_likes.id AS like_id')->get();
+    
         return view('user.product', compact('products'));
     }
-
+    
     public function cart()
     {
 
@@ -331,7 +350,7 @@ class ProductController extends Controller
         $quantity = trim($request->input('quantity'));
         $userId = auth()->user()->id;
 
-        // // Dump and die to inspect the received data
+
         // dd($productId, $quantity);
 
         // Find the cart item for the user and product
@@ -374,5 +393,24 @@ class ProductController extends Controller
 
         // Return a success response
         return response()->json(['message' => 'Item deleted from cart']);
+    }
+
+    public function userpurchase(Request $request)
+    {
+        $userId = Auth::id();
+        $statusFilter = $request->input('status-filter');
+    
+        $query = DB::table('orders')
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->select('orders.*', 'products.name as product_name', 'products.price as product_price','products.image')
+            ->where('orders.user_id', $userId);
+    
+        if ($statusFilter && $statusFilter !== 'all') {
+            $query->where('orders.status', $statusFilter);
+        }
+    
+        $products = $query->get();
+    
+        return view('user.mypurchase', compact('products'));
     }
 }

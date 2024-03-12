@@ -92,13 +92,17 @@
                 <input type="date" class="form-control" id="endDate">
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-            </div>
-
-        </div>
+       <div class="col-md-3 d-flex align-items-end">
+    <div class="form-group d-flex">
+        <button class="btn btn-primary mr-2" onclick="applyFilters()">Apply Filters</button>
+        <!-- <button class="btn btn-success" onclick="exportToExcel()">Export to Excel</button> -->
     </div>
+</div>
+
+    </div>
+
+    
+
 
 
 <div id="filteredData">
@@ -107,7 +111,7 @@
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 tm-block-col">
                 <div class="tm-bg-primary-dark tm-block tm-block-products">
                     <div class="tm-product-table-container">
-                        <table class="table table-hover tm-table-small tm-product-table">
+                        <table class="table table-hover tm-table-small tm-product-table" id="reportTable">
                             <thead>
                                 <tr>
                                     <th scope="col">Product Name</th>
@@ -134,6 +138,47 @@
     </div>
     </div>
 </div>
+<!-- Include DataTables CSS and JavaScript -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<!-- Include DataTables Buttons extension CSS and JavaScript -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#reportTable').DataTable({
+            dom: 'Bfrtip', // Add buttons to the DOM
+            buttons: [
+                'excel' // Enable Excel export button
+            ]
+        });
+    });
+</script>
+<style>
+   
+    #reportTable_wrapper {
+        color: #000; /* Set text color */
+    }
+
+    #reportTable th,
+    #reportTable td {
+
+        padding: 8px; /* Add padding */
+        background-color: #435c70; /* Set background color */
+        color: #fff; /* Set text color */
+    }
+
+    #reportTable th {
+        background-color: #354856; /* Set header background color */
+    }
+</style>
+
+
 
 <script>
 function applyFilters() {
@@ -150,12 +195,25 @@ function applyFilters() {
         },
         success: function(response) {
             $('#filteredData').html(response.html);
+
+            if ($.fn.DataTable.isDataTable('#reportTable')) {
+                $('#reportTable').DataTable().destroy();
+            }
+
+            $('#reportTable').DataTable({
+                dom: 'Bfrtip', // Add buttons to the DOM
+                buttons: [
+                    'excel' // Enable Excel export button
+                ]
+            });
         },
         error: function(xhr, status, error) {
             console.error(error);
         }
     });
 }
+
+
 
 </script>
 @endsection

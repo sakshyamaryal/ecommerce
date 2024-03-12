@@ -89,7 +89,7 @@
                 <button type="submit" class="btn btn-dark btn-lg full-width-btn mb-2">SIGN IN</button>
             </div>
             <div class="mb-3">
-                <button type="button" class="btn btn-dark btn-lg full-width-btn">CREATE AN ACCOUNT</button>
+            <a href="{{ route('signup') }}" class="btn btn-dark btn-lg full-width-btn mb-2">CREATE ACCOUNT</a>
             </div>
             <div class="mb-3">
                 <span class="required">* Required Fields</span>

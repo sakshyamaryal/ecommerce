@@ -36,14 +36,14 @@
                     } else {
                     // Add the product to the productQuantities array
                     $productQuantities[$product->id] = [
-                    'quantity' =>  $product->quantity,
+                    'quantity' => $product->quantity,
                     'price' => $product->price
                     ];
                     }
-                    
+
 
                     // Calculate the subtotal
-                     $subtotal += $product->price * $product->quantity;
+                    $subtotal += $product->price * $product->quantity;
 
                     @endphp
                     @endforeach
@@ -115,11 +115,9 @@
 
                             <tr>
                                 <td>
-                                <a href="{{ route('product.show', ['id' => $product->id]) }}" class="btn text-uppercase text-muted fw-bold custom-btn" 
-    data-bs-toggle="tooltip" data-bs-placement="top" title="View Details" 
-    style="background-color: #f4f4f4;">
-    View Detail
-</a>
+                                    <a href="{{ route('product.show', ['id' => $product->id]) }}" class="btn text-uppercase text-muted fw-bold custom-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details" style="background-color: #f4f4f4;">
+                                        View Detail
+                                    </a>
 
                                 </td>
                                 <td></td>
@@ -261,15 +259,15 @@
                 success: function(data) {
                     // $('#summary').load(location.href + ' #summary');
                     Swal.fire({
-                    icon: 'success',
-                    title: 'Item Deleted Successfully!',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    onClose: function() {
-                        // Refresh the page after deleting
-                        location.reload();
-                    }
-                });
+                        icon: 'success',
+                        title: 'Item Deleted Successfully!',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        onClose: function() {
+                            // Refresh the page after deleting
+                            location.reload();
+                        }
+                    });
                 }
             });
         });
@@ -293,15 +291,15 @@
                     // Recalculate subtotal
                     calculateSubtotal();
                     Swal.fire({
-                    icon: 'success',
-                    title: 'Item Deleted Successfully!',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    onClose: function() {
-                        // Refresh the page after deleting
-                        location.reload();
-                    }
-                });
+                        icon: 'success',
+                        title: 'Item Deleted Successfully!',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        onClose: function() {
+                            // Refresh the page after deleting
+                            location.reload();
+                        }
+                    });
                 }
             });
         });
@@ -336,30 +334,33 @@
 
 
     $('.productcheckout').on('click', function() {
-    var productIds = []; // Array to store product IDs
-    $('.cart-item').each(function() {
-        productIds.push($(this).data('product-id'));
-    });
+        var productIds = []; // Array to store product IDs
+        $('.cart-item').each(function() {
+            productIds.push($(this).data('product-id'));
+        });
 
-    $.ajax({
-        url: '{{ route("orders.checkoutitems") }}',
-        type: 'POST',
-        data: {
-            product_ids: productIds,
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-            // Handle success
-            Swal.fire('Success', 'Order placed successfully!', 'success');
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error(error);
+        // Check if the user is logged in
+        if ('{{ auth()->check() }}') {
+            $.ajax({
+                url: '{{ route("orders.checkoutitems") }}',
+                type: 'POST',
+                data: {
+                    product_ids: productIds,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    // Handle success
+                    Swal.fire('Success', 'Order placed successfully!', 'success');
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error(error);
+                }
+            });
+        } else {
+            Swal.fire('You must be logged in to continue', '', 'warning');
         }
     });
-});
-
-
 </script>
 
 

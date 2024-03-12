@@ -120,6 +120,17 @@
 
 
   <div class="col-9">
+  <div class="toolbar-sorter sorter">
+        <label class="sorter-label" for="sorter">Sort By</label>
+        <select id="sorter" data-role="sorter" class="sorter-options">
+          <option value="position">Position</option>
+          <option value="name">Product Name</option>
+          <option value="price" selected="selected">Price</option>
+        </select> 
+        <a title="Set Descending Direction" href="#" class="action sorter-action sort-asc" data-role="direction-switcher" data-value="desc">
+          <span>Set Direction</span>
+        </a>
+      </div>
     <div class="product-grid">
       @foreach($products as $product)
       <div class="product-item">
@@ -219,5 +230,28 @@
     });
   });
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const sorter = document.getElementById("sorter");
+    const directionSwitcher = document.querySelector(".sorter-action");
 
+    sorter.addEventListener("change", function() {
+        const selectedOption = sorter.value;
+        const currentUrl = window.location.href;
+        const url = new URL(currentUrl);
+        url.searchParams.set('sortBy', selectedOption);
+        window.location.href = url;
+    });
+
+    directionSwitcher.addEventListener("click", function(event) {
+        event.preventDefault();
+        const currentUrl = window.location.href;
+        const url = new URL(currentUrl);
+        const direction = url.searchParams.get('direction') === 'asc' ? 'desc' : 'asc';
+        url.searchParams.set('direction', direction);
+        window.location.href = url;
+    });
+});
+
+</script>
 @endsection

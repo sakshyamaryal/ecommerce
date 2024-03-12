@@ -114,7 +114,7 @@
               <a class="nav-link"  href="{{route('cart')}}">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Account</a>
+              <a class="nav-link" href="{{route('userpurchase')}}">My Purchase</a>
             </li>
           </ul>
         </div>

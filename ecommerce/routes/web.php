@@ -77,6 +77,7 @@ Route::get('/productList', [ProductController::class, 'productList'])->name('pro
 
 
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
+Route::get('/userpurchase', [ProductController::class, 'userpurchase'])->name('userpurchase');
 Route::get('/wish', [ProductController::class, 'wish'])->name('wish');
 Route::post('/update-cart', [ProductController::class, 'updateCart'])->name('cart.update');
 Route::post('/delete-item', [ProductController::class, 'deleteItem'])->name('cart.delete');

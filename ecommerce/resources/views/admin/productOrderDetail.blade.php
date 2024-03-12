@@ -66,10 +66,10 @@
     <div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
         <h2 class="tm-block-title">Recent Order List</h2>
         <div class="dropdown">
-            <button class="dropdown-toggle" type="button" id="statusFilterDropdown">
+            <button class="dropdown-toggles" type="button" id="statusFilterDropdown">
                 Filter by Status
             </button>
-            <div class="dropdown-menu" aria-labelledby="statusFilterDropdown">
+            <div class="dropdown-menus" aria-labelledby="statusFilterDropdown">
                 <button style="color: #000;" class="dropdown-item" data-status="completed">Completed</button>
                 <button style="color: #000;" class="dropdown-item" data-status="created">Not Completed</button>
             </div>
@@ -77,7 +77,7 @@
         <div class="tm-notification-items" id="ordersofproduct">
             <!-- Orders will be displayed here -->
             <br><br>
-            <div id="ordersContainer">
+            <div id="ordersContainer" style="overflow-y: auto; max-height: 300px;">
                 @foreach($orders as $order)
                 <div class="media tm-notification-item" id="order_{{$order->id}}">
                     <div class="tm-gray-circle"></div>
@@ -192,12 +192,12 @@
 </script>
 
 <style>
-    .dropdown {
+    /* .dropdown {
         position: relative;
         display: inline-block;
-    }
+    } */
 
-    .dropdown-toggle {
+     .dropdown-toggles {
         background-color: #f8f9fa;
         border: 1px solid #ced4da;
         color: #495057;
@@ -205,7 +205,7 @@
         cursor: pointer;
     }
 
-    .dropdown-menu {
+    .dropdown-menus {
         display: none;
         position: absolute;
         background-color: #ffffff;
@@ -213,18 +213,18 @@
         z-index: 1;
     }
 
-    .dropdown-menu a {
+    .dropdown-menus a {
         display: block;
         padding: 0.5rem 1rem;
         color: #343a40;
         text-decoration: none;
-    }
+    } 
 
-    .dropdown-menu a:hover {
+    .dropdown-menus a:hover {
         background-color: #f8f9fa;
     }
 
-    .dropdown:hover .dropdown-menu {
+    .dropdown:hover .dropdown-menus {
         display: block;
     }
 

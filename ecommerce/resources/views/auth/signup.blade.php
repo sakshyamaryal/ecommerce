@@ -26,6 +26,7 @@
     <div class="col-md-6">
         <h2 class="text-center mb-5 new-customer">New Customer</h2>
         <h4 class="mb-3 create-account">Create an Account</h4>
+
         <form method="POST" action="{{ route('signup.submit') }}">
             @csrf
 
@@ -69,7 +70,8 @@
             </div>
 
             <div class="mb-3">
-                <button type="submit" class="btn btn-dark btn-lg full-width-btn mb-2">CREATE ACCOUNT</button>
+                <a href="{{ route('signup') }}" class="btn btn-dark btn-lg full-width-btn mb-2">CREATE ACCOUNT</a>
+
             </div>
 
             <div class="mb-3">
