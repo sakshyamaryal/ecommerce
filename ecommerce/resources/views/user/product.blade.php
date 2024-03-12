@@ -97,8 +97,8 @@
             </div>
             <div class="product-details d-flex flex-column ps-4">
               <a href="{{ route('product.show', ['id' => $product->id]) }}" style="color: black;">
-                    <p style="font-size: 14px;">{{ $product->name }}</p>
-                </a>
+                <p style="font-size: 14px;">{{ $product->name }}</p>
+              </a>
               <p style="font-size: 14px;">⭐⭐⭐</p>
               <img src="https://logowik.com/content/uploads/images/apple8110.logowik.com.webp" width="20" height="20">
               <h5 class="fw-bold my-3">Rs {{ $product->price }}</h5>
@@ -119,8 +119,15 @@
       @foreach($products as $product)
       <div class="product-item">
         <div class="product-image-container">
-          <!-- Use the product image from the fetched data -->
-          <img src="https://www.olizstore.com/media/catalog/product/cache/08c45697224ec88f7e476fd58ef94e16/m/a/macbook-air-space-gray-config-201810_3.jpeg" alt="{{ $product->name }}" class="product-image">
+          @if($product['image'])
+          @php
+          $images = explode(',', $product['image']);
+          @endphp
+          <img src="{{ asset('images/product_images/' . $images[0]) }}" alt="{{ $product->name }}" class="product-image">
+          @else
+          No Image
+          @endif
+          <!-- <img src="https://www.olizstore.com/media/catalog/product/cache/08c45697224ec88f7e476fd58ef94e16/m/a/macbook-air-space-gray-config-201810_3.jpeg" alt="{{ $product->name }}" class="product-image"> -->
         </div>
         <h3 class="product-title">{{ $product->name }}</h3>
         <p class="product-review">⭐⭐⭐⭐</p>
@@ -129,10 +136,21 @@
           <h5 class="mt-3">Rs.{{ $product->price }}</h5>
         </div>
         <div class="d-flex gap-2 buttons-container">
-          <button type="button" class="btn btn-outline-dark heart-button"><i class="far fa-heart icon "></i></button>
-          <button class="add-to-cart-button" style="font-size: 14px;"> Add to Cart</button>
-          <button type="button" class="btn btn-outline-dark chart-button"><i class="fas fa-chart-bar icon"></i></button>
+          <button type="button" class="btn btn-outline-dark heart-button" onclick="addToFavorites(`{{ $product->id }}`)">
+            @if($product->like_id)
+            <i class="fas fa-heart icon text-danger"></i>
+            @else
+            <i class="far fa-heart icon"></i>
+            @endif
+          </button>
+          <button class="add-to-cart-button" style="font-size: 14px;" data-btnproductid="{{ $product->id }}">
+            Buy Now
+          </button>
+          <button type="button" class="btn btn-outline-dark chart-button">
+            <i class="fas fa-chart-bar icon"></i>
+          </button>
         </div>
+
       </div>
       @endforeach
     </div>
@@ -140,6 +158,58 @@
 
 </div>
 </div>
+<script>
+  function addToFavorites(productId) {
+    if ('{{ auth()->check() }}') {
+      $.ajax({
+        url: '/addToFavorites',
+        type: 'POST',
+        data: {
+          product_id: productId
+        },
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        success: function(response) {
+          // Handle success
+          if (response === 'liked') {
+            Swal.fire('Success', 'Product added to favorites!', 'success');
+            $('.heart-button i').removeClass('far').addClass('fas').css('color', 'red');
+          } else if (response === 'unliked') {
+            Swal.fire('Success', 'Product removed from favorites!', 'success');
+            $('.heart-button i').removeClass('fas').addClass('far').css('color', 'black');
+          }
+        },
+        error: function(xhr, status, error) {
+          // Handle error
+          console.error(error);
+        }
+      });
+    } else {
+      Swal.fire('You must be logged in to continue', '', 'warning');
+    }
+  }
 
+  $('.add-to-cart-button').on('click', function() {
+    var productId = $(this).data('btnproductid');
+
+    $.ajax({
+      url: '/makeOrder',
+      type: 'POST',
+      data: {
+        product_id: productId,
+        _token: '{{ csrf_token() }}'
+      },
+      success: function(response) {
+        // Handle success
+        Swal.fire('Success', 'Order placed successfully!', 'success');
+      },
+      error: function(xhr, status, error) {
+        // Handle error
+        console.error(error);
+      }
+    });
+  });
+</script>
 
 @endsection
